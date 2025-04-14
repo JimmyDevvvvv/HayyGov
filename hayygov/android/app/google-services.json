@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "358045926612",
+    "project_id": "hayygovv",
+    "storage_bucket": "hayygovv.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:358045926612:android:6f59ff917acc350b21e741",
+        "android_client_info": {
+          "package_name": "com.jimmy.neighborhoodconnect"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAIiL847RhqNRNU4SeZZWJ5b8BKAJOVHPU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
