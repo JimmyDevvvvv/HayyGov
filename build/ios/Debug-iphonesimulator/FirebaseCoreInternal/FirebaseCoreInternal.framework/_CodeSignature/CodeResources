@@ -26,11 +26,11 @@
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		REAsa7Isg7bdXS7cGyZxBw+h9PQ=
+		R/zb0lXqaXNZ45T0BAUse01NnEI=
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		QXclsD0fdhWD60lvGbzqE0ub+kQ=
+		0ra+HBT2A/62gl9aY6JNkdlITQ8=
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -42,7 +42,7 @@
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/arm64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		Xedar2dmTCQgAxAymraav+/rPcg=
+		x0w1EECRpsc/0JfDQokQ7oPvGmI=
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -54,7 +54,7 @@
 		</data>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/x86_64-apple-ios-simulator.swiftmodule</key>
 		<data>
-		Gw1Q35GT7p+1tQ89B9eO01Y0Fzo=
+		qLoOy6aA5N/v5+mDy+yCSPkwrWY=
 		</data>
 		<key>Modules/module.modulemap</key>
 		<data>
@@ -95,14 +95,14 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			LbuMUkOZ7sAC3Syo3kc9ASfLw1bkfn6ZsWeMqdhKsLM=
+			ch7czep6HM4IgHvuAOeST3w7KolmT5CLMkx2NuOO3FQ=
 			</data>
 		</dict>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash2</key>
 			<data>
-			7/dqpVJvG0OG3crdPQn0y7ySwO0/cPwasnSuTQHDZ+0=
+			lrjzVUAzrWAAaBjs4XDDuKQPTNMwfURB6sX0Zrk+1ek=
 			</data>
 		</dict>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
@@ -123,7 +123,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			VtLmjt+rhRi5shFo3799/4cLpYsPN/HXWf0al9UPfoQ=
+			jaXDBm7dpi6UdeG0vRXD5qI2r1uF3JsjcdxbGrvdAnQ=
 			</data>
 		</dict>
 		<key>Modules/FirebaseCoreInternal.swiftmodule/x86_64-apple-ios-simulator.abi.json</key>
@@ -144,7 +144,7 @@
 		<dict>
 			<key>hash2</key>
 			<data>
-			Y9lbAVuBBmhh4T3gM/LXo1NyhTkCNnmYhH8ZgJ7pFxs=
+			vXhGBF6Mi6LNKOYIr5UuWhd0ANNKMQPO94WdvMsh0hI=
 			</data>
 		</dict>
 		<key>Modules/module.modulemap</key>
