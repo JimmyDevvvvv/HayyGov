@@ -1,6 +1,6 @@
 1<?xml version="1.0" encoding="utf-8"?>
 2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-3    package="com.example.hayygov"
+3    package="com.example.continuehayygov"
 4    android:versionCode="1"
 5    android:versionName="1.0.0" >
 6
@@ -42,12 +42,12 @@
 32
 33    <permission
 33-->[androidx.core:core:1.13.1] /Users/aoy3/.gradle/caches/8.10.2/transforms/8cf478dec41eed746328fa8046755ba2/transformed/core-1.13.1/AndroidManifest.xml:22:5-24:47
-34        android:name="com.example.hayygov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+34        android:name="com.example.continuehayygov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
 34-->[androidx.core:core:1.13.1] /Users/aoy3/.gradle/caches/8.10.2/transforms/8cf478dec41eed746328fa8046755ba2/transformed/core-1.13.1/AndroidManifest.xml:23:9-81
 35        android:protectionLevel="signature" />
 35-->[androidx.core:core:1.13.1] /Users/aoy3/.gradle/caches/8.10.2/transforms/8cf478dec41eed746328fa8046755ba2/transformed/core-1.13.1/AndroidManifest.xml:24:9-44
 36
-37    <uses-permission android:name="com.example.hayygov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+37    <uses-permission android:name="com.example.continuehayygov.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
 37-->[androidx.core:core:1.13.1] /Users/aoy3/.gradle/caches/8.10.2/transforms/8cf478dec41eed746328fa8046755ba2/transformed/core-1.13.1/AndroidManifest.xml:26:5-97
 37-->[androidx.core:core:1.13.1] /Users/aoy3/.gradle/caches/8.10.2/transforms/8cf478dec41eed746328fa8046755ba2/transformed/core-1.13.1/AndroidManifest.xml:26:22-94
 38
@@ -58,9 +58,9 @@
 42        android:debuggable="true"
 43        android:extractNativeLibs="true"
 44        android:icon="@mipmap/ic_launcher"
-45        android:label="hayygov" >
+45        android:label="continuehayygov" >
 46        <activity
-47            android:name="com.example.hayygov.MainActivity"
+47            android:name="com.example.continuehayygov.MainActivity"
 48            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
 49            android:exported="true"
 50            android:hardwareAccelerated="true"
@@ -143,7 +143,7 @@
 104-->[com.google.firebase:firebase-common:21.0.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/f84ab3ff6a97e53fb3163820143e7e79/transformed/jetified-firebase-common-21.0.0/AndroidManifest.xml:23:9-28:39
 105            android:name="com.google.firebase.provider.FirebaseInitProvider"
 105-->[com.google.firebase:firebase-common:21.0.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/f84ab3ff6a97e53fb3163820143e7e79/transformed/jetified-firebase-common-21.0.0/AndroidManifest.xml:24:13-77
-106            android:authorities="com.example.hayygov.firebaseinitprovider"
+106            android:authorities="com.example.continuehayygov.firebaseinitprovider"
 106-->[com.google.firebase:firebase-common:21.0.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/f84ab3ff6a97e53fb3163820143e7e79/transformed/jetified-firebase-common-21.0.0/AndroidManifest.xml:25:13-72
 107            android:directBootAware="true"
 107-->[com.google.firebase:firebase-common:21.0.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/f84ab3ff6a97e53fb3163820143e7e79/transformed/jetified-firebase-common-21.0.0/AndroidManifest.xml:26:13-43
@@ -185,7 +185,7 @@
 127-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/e80aa748ff6540407d8dba61c0d945fe/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:24:9-32:20
 128            android:name="androidx.startup.InitializationProvider"
 128-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/e80aa748ff6540407d8dba61c0d945fe/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:25:13-67
-129            android:authorities="com.example.hayygov.androidx-startup"
+129            android:authorities="com.example.continuehayygov.androidx-startup"
 129-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/e80aa748ff6540407d8dba61c0d945fe/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:26:13-68
 130            android:exported="false" >
 130-->[androidx.lifecycle:lifecycle-process:2.7.0] /Users/aoy3/.gradle/caches/8.10.2/transforms/e80aa748ff6540407d8dba61c0d945fe/transformed/jetified-lifecycle-process-2.7.0/AndroidManifest.xml:27:13-37

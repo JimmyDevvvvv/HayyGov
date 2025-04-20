@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.hayygov.app-mergeDebugResources-42:/values-th/values-th.xml",
+            "outputFile": "com.example.continuehayygov.app-mergeDebugResources-42:/values-th/values-th.xml",
             "map": [
                 {
                     "source": "/Users/aoy3/.gradle/caches/8.10.2/transforms/abeed4f47a72eff8f5b4e9bf7f2f3c91/transformed/jetified-play-services-basement-18.3.0/res/values-th/values.xml",

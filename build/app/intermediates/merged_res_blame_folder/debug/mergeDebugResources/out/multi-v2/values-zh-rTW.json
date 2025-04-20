@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.hayygov.app-mergeDebugResources-42:/values-zh-rTW/values-zh-rTW.xml",
+            "outputFile": "com.example.continuehayygov.app-mergeDebugResources-42:/values-zh-rTW/values-zh-rTW.xml",
             "map": [
                 {
                     "source": "/Users/aoy3/.gradle/caches/8.10.2/transforms/80d381bf084c21e18706da6716588126/transformed/jetified-play-services-base-18.1.0/res/values-zh-rTW/values.xml",
