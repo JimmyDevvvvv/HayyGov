@@ -1,28 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import './providers/auth_provider.dart';
+import './screens/login_screen.dart';
+import './screens/home_screen.dart';
+import './screens/announcement_feed_screen.dart';
+import './screens/voting_screen.dart';
 import 'firebase_options.dart';
-import 'screens/home_screen.dart';
-import 'screens/announcement_feed_screen.dart';
-import 'screens/voting_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await dotenv.load();
+    print('Environment variables loaded:');
+    print(dotenv.env);
+  } catch (e) {
+    print('Failed to load .env file: $e');
+  }
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(const EmergencyApp());
+  runApp(MyApp());
 }
 
-class EmergencyApp extends StatelessWidget {
-  const EmergencyApp({super.key});
-
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Emergency App',
-      theme: ThemeData(primarySwatch: Colors.red),
-      home: const AppNavigator(),
+    return ChangeNotifierProvider(
+      create: (_) => AuthProvider(),
+      child: MaterialApp(
+        title: 'Emergency App',
+        theme: ThemeData(primarySwatch: Colors.red),
+        home: AuthWrapper(),
+      ),
     );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+    return authProvider.isAuthenticated ? AppNavigator() : LoginScreen();
   }
 }
 
