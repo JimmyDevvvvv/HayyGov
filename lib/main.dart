@@ -4,9 +4,12 @@ import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import './providers/auth_provider.dart';
 import './screens/login_screen.dart';
-import './screens/home_screen.dart';
-import './screens/announcement_feed_screen.dart';
-import './screens/voting_screen.dart';
+import 'screens/CIT/emergencyN.dart';
+import 'screens/CIT/announcement_feed_screen.dart';
+import 'screens/CIT/voting_screen.dart';
+import 'screens/CIT/citizen_home_screen.dart';
+import 'screens/GOV/government_dashboard_screen.dart';
+import 'screens/AD/advertiser_dashboard_screen.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -32,7 +35,13 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Emergency App',
         theme: ThemeData(primarySwatch: Colors.red),
-        home: AuthWrapper(),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => LoginScreen(),
+          '/citizenHome': (context) => CitizenHomeScreen(),
+          '/govDashboard': (context) => GovernmentDashboardScreen(),
+          '/advertiserDashboard': (context) => AdvertiserDashboardScreen(),
+        },
       ),
     );
   }
