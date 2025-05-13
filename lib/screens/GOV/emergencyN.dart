@@ -93,11 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFD6C4B0),
-      appBar: AppBar(
-        title: const Text('Emergency Numbers'),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white,
-      ),
       body: RefreshIndicator(
         onRefresh: _reloadContacts, // trigger reload when pulled
         child: StreamBuilder<List<EmergencyContact>>(

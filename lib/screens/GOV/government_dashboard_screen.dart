@@ -15,52 +15,11 @@ class _GovernmentDashboardScreenState extends State<GovernmentDashboardScreen> {
     HomeScreen(),
   ];
 
-  void _showAddEmergencyServiceModal() {
-    showModalBottomSheet(
-      context: context,
-      builder: (BuildContext context) {
-        return Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                decoration: InputDecoration(labelText: 'Service Name'),
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'Phone Number'),
-                keyboardType: TextInputType.phone,
-              ),
-              TextField(
-                decoration: InputDecoration(labelText: 'URL Link'),
-                keyboardType: TextInputType.url,
-              ),
-              SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () {
-                  // Handle save action
-                  Navigator.pop(context);
-                },
-                child: Text('Save'),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Government Dashboard'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: _showAddEmergencyServiceModal,
-          ),
-        ],
+        title: Text('HayyGov'),
       ),
       body: _screens[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
