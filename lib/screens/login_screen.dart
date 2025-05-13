@@ -29,12 +29,16 @@ class LoginScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                final result = await authProvider.login(
-                  email: _emailController.text.trim(),
-                  password: _passwordController.text.trim(),
-                );
-                if (result != "success") {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+                try {
+                  await authProvider.login(
+                    _emailController.text.trim(),
+                    _passwordController.text.trim(),
+                    context,
+                  );
+                } catch (e) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Login failed: $e')),
+                  );
                 }
               },
               child: Text('Login'),

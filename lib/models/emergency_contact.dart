@@ -56,4 +56,14 @@ class EmergencyContact {
       iconUrl: data['iconUrl'] ?? '',
     );
   }
+
+  // Save to Firestore
+  Map<String, dynamic> toFirestore() {
+    return {
+      'id': id,
+      'name': name,
+      'number': number,
+      'iconUrl': iconUrl,
+    };
+  }
 }

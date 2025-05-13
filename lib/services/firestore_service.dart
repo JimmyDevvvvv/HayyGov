@@ -51,4 +51,19 @@ class FirestoreService {
   Future<List<EmergencyContact>> getContactsOffline() async {
     return await _localStorage.loadContacts();
   }
+
+  Future<void> addContact(EmergencyContact contact) async {
+    await _db.collection('emergency_numbers').add(contact.toFirestore());
+  }
+
+  Future<void> deleteContact(EmergencyContact contact) async {
+    final snapshot = await _db
+        .collection('emergency_numbers')
+        .where('id', isEqualTo: contact.id)
+        .get();
+
+    for (var doc in snapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
 }
