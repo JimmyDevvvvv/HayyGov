@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'emergencyN.dart';
-import 'announcement_feed_screen.dart';
-import 'voting_screen.dart';
+import 'citizen_announcements_polls_screen.dart';
 
 class CitizenHomeScreen extends StatefulWidget {
   const CitizenHomeScreen({super.key});
@@ -14,9 +13,8 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    HomeScreen(),
-    AnnouncementFeedScreen(),
-    VotingScreen(),
+    HomeScreen(), // Emergency numbers screen
+    CitizenAnnouncementsPollsScreen(), // New combined screen
   ];
 
   @override
@@ -30,8 +28,7 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
         unselectedItemColor: Colors.grey,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Emergency'),
-          BottomNavigationBarItem(icon: Icon(Icons.campaign), label: 'Announcements'),
-          BottomNavigationBarItem(icon: Icon(Icons.poll), label: 'Polls'),
+          BottomNavigationBarItem(icon: Icon(Icons.campaign), label: 'Updates'),
         ],
       ),
     );
