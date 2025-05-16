@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'emergencyN.dart';
-import 'announcements_section.dart';
 import 'polls_section.dart';
+import 'announcement_feed_screen.dart'; // ✅ GOV version with FAB
 
 class GovernmentMainScreen extends StatelessWidget {
   const GovernmentMainScreen({super.key});
@@ -22,7 +22,7 @@ class GovernmentMainScreen extends StatelessWidget {
               onTap: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (_) => const AnnouncementsSection()),
+                  MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()), // ✅ FIXED
                 );
               },
             ),
