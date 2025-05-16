@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/message.dart';
@@ -8,11 +7,7 @@ class AdminChatScreen extends StatefulWidget {
   final String userId;
   final String userRole;
 
-  const AdminChatScreen({
-    Key? key,
-    required this.userId,
-    required this.userRole,
-  }) : super(key: key);
+  const AdminChatScreen({super.key, required this.userId, required this.userRole});
 
   @override
   State<AdminChatScreen> createState() => _AdminChatScreenState();
@@ -50,7 +45,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
 
       _controller.clear();
     } catch (e) {
-      print("❌ Error sending reply: $e");
+      // Error handling
     }
   }
 

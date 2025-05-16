@@ -12,7 +12,7 @@ class AnnouncementService {
         .orderBy('Time', descending: true)
         .get();
 
-    print("📄 Announcements fetched: ${snapshot.docs.length}");
+    // print("📄 Announcements fetched: ${snapshot.docs.length}");
 
     return snapshot.docs
         .map((doc) => Announcement.fromFirestore(doc.data(), doc.id))
@@ -28,10 +28,10 @@ class AnnouncementService {
         .orderBy('Timestamp')   // ✅ MUST MATCH Firestore field exactly
         .snapshots()
         .map((snapshot) {
-          print("📥 Streaming ${snapshot.docs.length} comments for $announcementId");
-          for (var doc in snapshot.docs) {
-            print("🧾 ${doc.data()}");
-          }
+          // print("📥 Streaming ${snapshot.docs.length} comments for $announcementId");
+          // for (var doc in snapshot.docs) {
+          //   print("🧾 ${doc.data()}");
+          // }
           return snapshot.docs
               .map((doc) => CommentModel.fromFirestore(doc.data()))
               .toList();
@@ -41,7 +41,7 @@ class AnnouncementService {
   // 📝 Add a comment to the correct subcollection with TitleCase field names
   Future<void> addComment(String announcementId, CommentModel comment) async {
     final data = comment.toMap();
-    print("📨 Adding comment: $data");
+    // print("📨 Adding comment: $data");
 
     await _db
         .collection('Announcements')

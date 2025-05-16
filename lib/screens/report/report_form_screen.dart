@@ -22,6 +22,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
 
     final userId = _auth.currentUser?.uid;
     if (userId == null) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("User not authenticated.")),
       );
@@ -36,17 +37,19 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
         'content': content,
         'timestamp': Timestamp.now(),
       });
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Report submitted successfully!")),
       );
       _reportController.clear();
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error: $e")),
       );
     }
 
+    if (!mounted) return;
     setState(() => _isSubmitting = false);
   }
 

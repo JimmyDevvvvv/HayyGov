@@ -6,7 +6,7 @@ import '../../models/message.dart';
 class ChatScreen extends StatefulWidget {
   final String senderRole; // "citizen" or "advertiser"
 
-  const ChatScreen({Key? key, required this.senderRole}) : super(key: key);
+  const ChatScreen({super.key, required this.senderRole});
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -45,7 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
       _controller.clear();
     } catch (e) {
-      print("❌ Error sending message: $e");
+      // Handle error appropriately
     }
   }
 

@@ -3,54 +3,63 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import './signup_screen.dart';
 
-class LoginScreen extends StatelessWidget {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> login() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    await authProvider.login(
+      emailController.text.trim(),
+      passwordController.text.trim(),
+      context,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-
     return Scaffold(
-      appBar: AppBar(title: Text('Login')),
+      appBar: AppBar(title: const Text('Login')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () async {
-                try {
-                  await authProvider.login(
-                    _emailController.text.trim(),
-                    _passwordController.text.trim(),
-                    context,
-                  );
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Login failed: $e')),
-                  );
-                }
-              },
-              child: Text('Login'),
+              onPressed: login,
+              child: const Text('Login'),
             ),
             TextButton(
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => SignupScreen()),
+                  MaterialPageRoute(builder: (context) => const SignupScreen()),
                 );
               },
-              child: Text("Don't have an account? Sign up"),
+              child: const Text("Don't have an account? Sign up"),
             ),
           ],
         ),

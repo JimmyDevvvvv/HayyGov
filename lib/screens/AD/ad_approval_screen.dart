@@ -69,7 +69,7 @@ class AdApprovalScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(8.0),
                             child: Image.network(imageUrl, height: 200, fit: BoxFit.cover),
                           ),
-                        ButtonBar(
+                        OverflowBar(
                           alignment: MainAxisAlignment.end,
                           children: [
                             ElevatedButton.icon(

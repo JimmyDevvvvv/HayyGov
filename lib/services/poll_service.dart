@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/poll.dart';
-import '../device_id.dart'; // ✅ now correct based on your current setup
-
 
 class PollService {
   final _db = FirebaseFirestore.instance;
@@ -15,7 +14,10 @@ class PollService {
   }
 
   Future<void> vote(String pollId, String choice) async {
-    final userId = await DeviceId.getId(); // 👈 Use device ID instead of Firebase Auth
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) throw Exception("User not logged in");
+
+    final userId = user.uid;
 
     final docRef = _db.collection('Polls').doc(pollId);
 
@@ -26,7 +28,7 @@ class PollService {
       List<dynamic> voters = data['Voters'] ?? [];
 
       if (voters.contains(userId)) {
-        throw Exception("You’ve already voted!");
+        throw Exception("You've already voted!");
       }
 
       final updatedFields = {

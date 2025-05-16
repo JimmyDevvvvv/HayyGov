@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'emergencyN.dart';
-import 'announcement_feed_screen.dart';
-import 'voting_screen.dart';
+import 'emergency_n.dart';
+import 'citizen_announcements_polls_screen.dart';
 import '../messaging/chat_screen.dart';
 import '../report/report_form_screen.dart';
 import '../AD/ad_feed_screen.dart';
@@ -17,30 +16,29 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
+    CitizenAnnouncementsPollsScreen(),// 1 - Announcements & Polls
     HomeScreen(),                     // 0 - Emergency
-    AnnouncementFeedScreen(),        // 1 - Announcements
-    VotingScreen(),                  // 2 - Polls
     const SizedBox.shrink(),         // 3 - Chat (push screen)
     const SizedBox.shrink(),         // 4 - Report (push screen)
     const AdFeedScreen(),            // 5 - Ads (approved only)
   ];
 
   void _handleNavigation(int index) {
-    if (index == 3) {
+    if (index == 2) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const ChatScreen(senderRole: "citizen"),
         ),
       );
-    } else if (index == 4) {
+    } else if (index == 3) {
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => const ReportFormScreen(),
         ),
       );
-    } else {
+    } else if (index < _screens.length) {
       setState(() => _currentIndex = index);
     }
   }
@@ -55,9 +53,8 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Emergency'),
           BottomNavigationBarItem(icon: Icon(Icons.campaign), label: 'Announcements'),
-          BottomNavigationBarItem(icon: Icon(Icons.poll), label: 'Polls'),
+          BottomNavigationBarItem(icon: Icon(Icons.phone), label: 'Emergency'),
           BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Message'),
           BottomNavigationBarItem(icon: Icon(Icons.report), label: 'Report'),
           BottomNavigationBarItem(icon: Icon(Icons.local_offer), label: 'Ads'),

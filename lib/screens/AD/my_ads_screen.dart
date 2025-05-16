@@ -8,8 +8,10 @@ class MyAdsScreen extends StatelessWidget {
   Future<void> _deleteAd(BuildContext context, String adId) async {
     try {
       await FirebaseFirestore.instance.collection('ads').doc(adId).delete();
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Ad deleted successfully")));
     } catch (e) {
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Failed to delete: $e")));
     }
   }
@@ -42,9 +44,11 @@ class MyAdsScreen extends StatelessWidget {
                   'disapproved': false, // Reset disapproval if any
                   'timestamp': Timestamp.now(),
                 });
+                if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Ad updated. Awaiting re-approval.")));
               } catch (e) {
+                if (!context.mounted) return;
                 Navigator.pop(context);
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Update failed: $e")));
               }
@@ -114,7 +118,7 @@ class MyAdsScreen extends StatelessWidget {
                     ),
                     if (imageUrl != null && imageUrl.isNotEmpty)
                       Image.network(imageUrl, height: 200, fit: BoxFit.cover),
-                    ButtonBar(
+                    OverflowBar(
                       children: [
                         TextButton.icon(
                           onPressed: () => _editAd(context, doc.id, ad),

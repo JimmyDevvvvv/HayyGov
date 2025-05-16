@@ -3,63 +3,67 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  String _selectedRole = 'citizen'; // Default role
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  String selectedRole = 'citizen'; // Default role
+
+  Future<void> _signUp() async {
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+    final result = await authProvider.signUpWithRole(
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+      role: selectedRole,
+    );
+    if (!mounted) return;
+    if (result != "success") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
+    } else {
+      Navigator.pop(context); // Go back to login screen
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-
     return Scaffold(
-      appBar: AppBar(title: Text('Sign Up')),
+      appBar: AppBar(title: const Text('Sign Up')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: 'Email'),
+              controller: emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: 'Password'),
+              controller: passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
               obscureText: true,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             DropdownButton<String>(
-              value: _selectedRole,
-              items: [
+              value: selectedRole,
+              items: const [
                 DropdownMenuItem(value: 'citizen', child: Text('Citizen')),
                 DropdownMenuItem(value: 'advertiser', child: Text('Advertiser')),
               ],
               onChanged: (value) {
                 if (value != null) {
                   setState(() {
-                    _selectedRole = value;
+                    selectedRole = value;
                   });
                 }
               },
             ),
             ElevatedButton(
-              onPressed: () async {
-                final result = await authProvider.signUpWithRole(
-                  email: _emailController.text.trim(),
-                  password: _passwordController.text.trim(),
-                  role: _selectedRole,
-                );
-                if (result != "success") {
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
-                } else {
-                  Navigator.pop(context); // Go back to login screen
-                }
-              },
-              child: Text('Sign Up'),
+              onPressed: _signUp,
+              child: const Text('Sign Up'),
             ),
           ],
         ),
