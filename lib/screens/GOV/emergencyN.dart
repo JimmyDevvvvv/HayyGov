@@ -3,15 +3,16 @@ import 'package:uuid/uuid.dart';
 import '../../models/emergency_contact.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/contact_card.dart';
+import 'government_main_screen.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class EmergencyN extends StatefulWidget {
+  const EmergencyN({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<EmergencyN> createState() => _EmergencyNState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _EmergencyNState extends State<EmergencyN> {
   final FirestoreService firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
   List<EmergencyContact> _offlineContacts = [];
@@ -30,6 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _reloadContacts() async {
+    // Reload contacts from Firestore and update UI
     final contacts = await firestoreService.getContacts();
     setState(() {
       _offlineContacts = contacts;
@@ -50,20 +52,20 @@ class _HomeScreenState extends State<HomeScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
-                decoration: const InputDecoration(labelText: 'Name'),
+                decoration: InputDecoration(labelText: 'Name'),
                 onChanged: (value) => name = value,
               ),
               TextField(
-                decoration: const InputDecoration(labelText: 'Number'),
+                decoration: InputDecoration(labelText: 'Number'),
                 keyboardType: TextInputType.phone,
                 onChanged: (value) => number = value,
               ),
               TextField(
-                decoration: const InputDecoration(labelText: 'Icon URL'),
+                decoration: InputDecoration(labelText: 'Icon URL'),
                 keyboardType: TextInputType.url,
                 onChanged: (value) => iconUrl = value,
               ),
-              const SizedBox(height: 16),
+              SizedBox(height: 16),
               ElevatedButton(
                 onPressed: () async {
                   final newContact = EmergencyContact(
@@ -74,9 +76,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                   await firestoreService.addContact(newContact);
                   Navigator.pop(context);
-                  _reloadContacts(); // ✅ Refresh after adding
                 },
-                child: const Text('Save'),
+                child: Text('Save'),
               ),
             ],
           ),
@@ -86,16 +87,24 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _deleteEmergencyContact(EmergencyContact contact) async {
-    await firestoreService.deleteContact(contact.id); // ✅ Fixed: pass ID
-    _reloadContacts(); // ✅ Refresh after deletion
+    await firestoreService.deleteContact(contact.id);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Emergency Numbers'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
+      ),
       backgroundColor: const Color(0xFFD6C4B0),
       body: RefreshIndicator(
-        onRefresh: _reloadContacts,
+        onRefresh: _reloadContacts, // trigger reload when pulled
         child: StreamBuilder<List<EmergencyContact>>(
           stream: firestoreService.getContactsStream(),
           builder: (context, snapshot) {
@@ -116,16 +125,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 final contact = contacts[index];
                 return Dismissible(
                   key: Key(contact.id),
-                  direction: DismissDirection.endToStart,
-                  background: Container(
-                    alignment: Alignment.centerRight,
-                    color: Colors.red,
-                    padding: const EdgeInsets.only(right: 20),
-                    child: const Icon(Icons.delete, color: Colors.white),
-                  ),
                   onDismissed: (direction) {
                     _deleteEmergencyContact(contact);
                   },
+                  background: Container(color: Colors.red),
                   child: ContactCard(contact: contact),
                 );
               },

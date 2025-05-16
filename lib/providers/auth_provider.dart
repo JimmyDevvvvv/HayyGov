@@ -133,7 +133,7 @@ class AuthProvider with ChangeNotifier {
         if (role == 'citizen') {
           Navigator.pushReplacementNamed(context, '/citizenHome');
         } else if (role == 'government') {
-          Navigator.pushReplacementNamed(context, '/govDashboard');
+          Navigator.pushReplacementNamed(context, '/govHome');
         } else if (role == 'advertiser') {
           Navigator.pushReplacementNamed(context, '/advertiserDashboard');
         } else {
