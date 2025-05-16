@@ -1,112 +1,97 @@
 import 'package:flutter/material.dart';
-import 'emergency_n.dart';
-import 'announcements_section.dart';
 import 'polls_section.dart';
+import 'emergency_n.dart';
+import '../messaging/admin_inbox_screen.dart';
+import '../report/report_list_screen.dart';
+import '../AD/ad_approval_screen.dart';
+import 'announcements_section.dart';
 
-class GovernmentMainScreen extends StatelessWidget {
+class GovernmentMainScreen extends StatefulWidget {
   const GovernmentMainScreen({super.key});
+
+  @override
+  State<GovernmentMainScreen> createState() => _GovernmentMainScreenState();
+}
+
+class _GovernmentMainScreenState extends State<GovernmentMainScreen> {
+  int _currentIndex = 0;
+
+  final List<Widget> _screens = [
+    _GovDashboard(), // Main dashboard with navigation tiles
+    AdminInboxScreen(),
+    ReportListScreen(),
+    AdApprovalScreen(),
+  ];
+
+  void _navigateTo(int index) {
+    setState(() => _currentIndex = index);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Government Home')),
-      body: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _HomeCard(
-              icon: Icons.announcement,
-              title: 'Announcements',
-              description: 'View and create community announcements.',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const AnnouncementsSection()),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            _HomeCard(
-              icon: Icons.poll,
-              title: 'Polls',
-              description: 'Manage and create community polls.',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const PollsSection()),
-                );
-              },
-            ),
-            const SizedBox(height: 24),
-            _HomeCard(
-              icon: Icons.phone,
-              title: 'Emergency Numbers',
-              description: 'Access and update emergency contacts.',
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => const EmergencyN()),
-                );
-              },
-            ),
-          ],
-        ),
+      appBar: AppBar(title: const Text('HayyGov')),
+      body: _screens[_currentIndex],
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        onTap: _navigateTo,
+        selectedItemColor: Colors.red,
+        unselectedItemColor: Colors.grey,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Main'),
+          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Inbox'),
+          BottomNavigationBarItem(icon: Icon(Icons.report_problem), label: 'Reports'),
+          BottomNavigationBarItem(icon: Icon(Icons.verified), label: 'Approve Ads'),
+        ],
       ),
     );
   }
 }
 
-class _HomeCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
-  final VoidCallback onTap;
-
-  const _HomeCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.onTap,
-  });
-
+class _GovDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(20),
-      child: Ink(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 4),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 28, horizontal: 20),
-          child: Row(
-            children: [
-              Icon(icon, size: 40, color: Colors.blueGrey),
-              const SizedBox(width: 24),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 8),
-                    Text(description, style: const TextStyle(fontSize: 15, color: Colors.black54)),
-                  ],
-                ),
-              ),
-            ],
+    final parentState = context.findAncestorStateOfType<_GovernmentMainScreenState>();
+    return ListView(
+      padding: const EdgeInsets.all(24),
+      children: [
+        ListTile(
+          leading: const Icon(Icons.announcement),
+          title: const Text('Announcements'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => AnnouncementsSection()),
           ),
         ),
-      ),
+        ListTile(
+          leading: const Icon(Icons.poll),
+          title: const Text('Polls'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => PollsSection()),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.phone),
+          title: const Text('Emergency Numbers'),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => EmergencyN()),
+          ),
+        ),
+        ListTile(
+          leading: const Icon(Icons.message),
+          title: const Text('Inbox'),
+          onTap: () => parentState?._navigateTo(1),
+        ),
+        ListTile(
+          leading: const Icon(Icons.report_problem),
+          title: const Text('Reports'),
+          onTap: () => parentState?._navigateTo(2),
+        ),
+        ListTile(
+          leading: const Icon(Icons.verified),
+          title: const Text('Approve Ads'),
+          onTap: () => parentState?._navigateTo(3),
+        ),
+      ],
     );
   }
 }
