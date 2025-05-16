@@ -3,7 +3,6 @@ import 'package:uuid/uuid.dart';
 import '../../models/emergency_contact.dart';
 import '../../services/firestore_service.dart';
 import '../../widgets/contact_card.dart';
-import 'government_main_screen.dart';
 
 class EmergencyN extends StatefulWidget {
   const EmergencyN({super.key});
