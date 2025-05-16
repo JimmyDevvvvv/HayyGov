@@ -29,6 +29,8 @@ class ReportListScreen extends StatelessWidget {
               final userId = data['userId'];
               final content = data['content'];
               final timestamp = (data['timestamp'] as Timestamp).toDate();
+              final imageUrl = data['imageUrl'] ?? '';
+              final location = data['location'] ?? '';
 
               return FutureBuilder<DocumentSnapshot>(
                 future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
@@ -50,6 +52,14 @@ class ReportListScreen extends StatelessWidget {
                         children: [
                           const SizedBox(height: 4),
                           Text(content),
+                          if (imageUrl.isNotEmpty) ...[
+                            const SizedBox(height: 8),
+                            Image.network(imageUrl, height: 150, fit: BoxFit.cover, errorBuilder: (context, error, stackTrace) => const Text('Could not load image')), 
+                          ],
+                          if (location.isNotEmpty) ...[
+                            const SizedBox(height: 6),
+                            Text("📍 Location: $location", style: const TextStyle(fontSize: 13)),
+                          ],
                           const SizedBox(height: 6),
                           Text(
                             "Submitted at: ${timestamp.toLocal()}",

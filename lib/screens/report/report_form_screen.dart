@@ -11,6 +11,8 @@ class ReportFormScreen extends StatefulWidget {
 
 class _ReportFormScreenState extends State<ReportFormScreen> {
   final TextEditingController _reportController = TextEditingController();
+  final TextEditingController _imageUrlController = TextEditingController();
+  final TextEditingController _locationController = TextEditingController();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -18,6 +20,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
 
   Future<void> _submitReport() async {
     final content = _reportController.text.trim();
+    final imageUrl = _imageUrlController.text.trim();
+    final location = _locationController.text.trim();
     if (content.isEmpty) return;
 
     final userId = _auth.currentUser?.uid;
@@ -35,6 +39,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
       await _firestore.collection('reports').add({
         'userId': userId,
         'content': content,
+        'imageUrl': imageUrl,
+        'location': location,
         'timestamp': Timestamp.now(),
       });
       if (!mounted) return;
@@ -42,6 +48,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
         const SnackBar(content: Text("Report submitted successfully!")),
       );
       _reportController.clear();
+      _imageUrlController.clear();
+      _locationController.clear();
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -71,6 +79,24 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "e.g. Water pipes are broken near 5th Street...",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _imageUrlController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Image URL (optional)",
+                hintText: "Paste a link to an image",
+              ),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _locationController,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: "Location (optional)",
+                hintText: "e.g. 5th Street, near the park",
               ),
             ),
             const SizedBox(height: 20),
