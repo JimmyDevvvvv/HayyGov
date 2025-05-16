@@ -15,10 +15,10 @@ void main() async {
 
   try {
     await dotenv.load();
-    print('Environment variables loaded:');
-    print(dotenv.env);
+    // print('Environment variables loaded:');
+    // print(dotenv.env);
   } catch (e) {
-    print('Failed to load .env file: $e');
+    // print('Failed to load .env file: $e');
   }
 
   await Firebase.initializeApp(

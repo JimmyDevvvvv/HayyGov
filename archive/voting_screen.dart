@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import '../lib/services/poll_service.dart';
-import '../lib/models/poll.dart';
+import 'package:continuehayygov/services/poll_service.dart';
+import 'package:continuehayygov/models/poll.dart';
 
 class VotingScreen extends StatelessWidget {
+  VotingScreen({super.key});
   final service = PollService();
 
   @override
@@ -40,10 +41,17 @@ class VotingScreen extends StatelessWidget {
                             onPressed: () async {
                               try {
                                 await service.vote(poll.id, 'yes');
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Vote submitted!')),
+                                  );
+                                }
                               } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(e.toString())),
-                                );
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())),
+                                  );
+                                }
                               }
                             },
                             child: Text('Yes'),
@@ -53,10 +61,17 @@ class VotingScreen extends StatelessWidget {
                             onPressed: () async {
                               try {
                                 await service.vote(poll.id, 'no');
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text('Vote submitted!')),
+                                  );
+                                }
                               } catch (e) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(e.toString())),
-                                );
+                                if (context.mounted) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())),
+                                  );
+                                }
                               }
                             },
                             child: Text('No'),

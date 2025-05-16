@@ -6,7 +6,7 @@ import '../../services/announcement_service.dart';
 class AnnouncementDetailScreen extends StatefulWidget {
   final Announcement announcement;
 
-  AnnouncementDetailScreen({required this.announcement});
+  const AnnouncementDetailScreen({super.key, required this.announcement});
 
   @override
   State<AnnouncementDetailScreen> createState() => _AnnouncementDetailScreenState();

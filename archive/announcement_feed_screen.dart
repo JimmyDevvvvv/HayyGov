@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import '../lib/models/announcement.dart';
-import '../lib/services/announcement_service.dart';
-import '../lib/screens/CIT/announcement_detail_screen.dart';
+import 'package:continuehayygov/models/announcement.dart';
+import 'package:continuehayygov/services/announcement_service.dart';
+import 'package:continuehayygov/screens/CIT/announcement_detail_screen.dart';
 
 class AnnouncementFeedScreen extends StatelessWidget {
+  AnnouncementFeedScreen({super.key});
   final service = AnnouncementService();
 
   @override
@@ -13,11 +14,6 @@ class AnnouncementFeedScreen extends StatelessWidget {
       body: FutureBuilder<List<Announcement>>(
         future: service.getAnnouncements(),
         builder: (context, snapshot) {
-          print("📡 snapshot.connectionState: ${snapshot.connectionState}");
-          print("📡 snapshot.hasData: ${snapshot.hasData}");
-          print("⚠️ snapshot.error: ${snapshot.error}");
-          print("📦 snapshot.data: ${snapshot.data}");
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -27,7 +23,6 @@ class AnnouncementFeedScreen extends StatelessWidget {
           }
 
           final announcements = snapshot.data!;
-          print("✅ Loaded ${announcements.length} announcements");
 
           return ListView.builder(
             itemCount: announcements.length,

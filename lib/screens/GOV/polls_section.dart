@@ -27,7 +27,7 @@ class PollsSection extends StatelessWidget {
                       final data = docs[index].data() as Map<String, dynamic>;
                       final title = data['Title'] ?? '';
                       final options = data.entries.where((e) => e.key != 'Title' && e.key != 'Voters');
-                      final totalVotes = options.fold<int>(0, (sum, e) => sum + (e.value as int? ?? 0));
+                      final totalVotes = options.fold<int>(0, (prev, e) => prev + (e.value as int? ?? 0));
                       return Card(
                         margin: const EdgeInsets.symmetric(vertical: 8),
                         child: Padding(
@@ -80,7 +80,7 @@ class _PollCreateDialog extends StatefulWidget {
 class _PollCreateDialogState extends State<_PollCreateDialog> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  List<TextEditingController> _optionControllers = [
+  final List<TextEditingController> _optionControllers = [
     TextEditingController(),
     TextEditingController(),
   ];
@@ -106,6 +106,7 @@ class _PollCreateDialogState extends State<_PollCreateDialog> {
     final title = _titleController.text.trim();
     final options = _optionControllers.map((c) => c.text.trim()).where((o) => o.isNotEmpty).toList();
     if (options.length < 2) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('At least two choices are required.')),
       );
@@ -119,8 +120,11 @@ class _PollCreateDialogState extends State<_PollCreateDialog> {
       pollData[option] = 0;
     }
     await FirebaseFirestore.instance.collection('Polls').add(pollData);
+    if (!mounted) return;
     Navigator.pop(context);
   }
+
+  int totalVotes(Iterable<int> votes) => votes.fold(0, (prev, element) => prev + element);
 
   @override
   Widget build(BuildContext context) {

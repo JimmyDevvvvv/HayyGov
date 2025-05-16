@@ -56,20 +56,20 @@ class AuthProvider with ChangeNotifier {
       // Ensure Firestore is initialized before adding data
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      print("Storing user data in Firestore with role: citizen");
+      // print("Storing user data in Firestore with role: citizen");
       await firestore.collection('users').doc(uid).set({
         'email': email,
         'role': 'citizen',
         'createdAt': FieldValue.serverTimestamp(),
       }).then((_) {
-        print("Citizen data successfully added to Firestore.");
+        // print("Citizen data successfully added to Firestore.");
       }).catchError((error) {
-        print("Failed to add citizen data to Firestore: $error");
+        // print("Failed to add citizen data to Firestore: $error");
       });
 
-      print("Citizen account created!");
+      // print("Citizen account created!");
     } catch (e) {
-      print("Error signing up: $e");
+      // print("Error signing up: $e");
     }
   }
 
@@ -87,10 +87,10 @@ class AuthProvider with ChangeNotifier {
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      print("User with role $role successfully added to Firestore.");
+      // print("User with role $role successfully added to Firestore.");
       return "success";
     } catch (e) {
-      print("Error signing up with role: $e");
+      // print("Error signing up with role: $e");
       return e.toString();
     }
   }
@@ -102,14 +102,14 @@ class AuthProvider with ChangeNotifier {
 
       String uid = userCredential.user!.uid;
 
-      print("Fetching user role from Firestore for UID: $uid");
+      // print("Fetching user role from Firestore for UID: $uid");
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
           .get();
 
       if (!userDoc.exists) {
-        print("User record not found in Firestore. Adding default citizen record.");
+        // print("User record not found in Firestore. Adding default citizen record.");
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'email': email,
           'role': 'citizen', // Default role
@@ -122,13 +122,15 @@ class AuthProvider with ChangeNotifier {
           .doc(uid)
           .get()
           .catchError((error) {
-            print("Failed to fetch user role: $error");
+            // print("Failed to fetch user role: $error");
             return FirebaseFirestore.instance.collection('users').doc(uid).get();
           });
 
+      if (!context.mounted) return;
+
       if (userDoc.exists) {
         String role = userDoc['role'];
-        print("User role fetched: $role");
+        // print("User role fetched: $role");
 
         if (role == 'citizen') {
           Navigator.pushReplacementNamed(context, '/citizenHome');
@@ -137,13 +139,13 @@ class AuthProvider with ChangeNotifier {
         } else if (role == 'advertiser') {
           Navigator.pushReplacementNamed(context, '/advertiserDashboard');
         } else {
-          print("Unknown role.");
+          // print("Unknown role.");
         }
       } else {
-        print("User record not found in Firestore.");
+        // print("User record not found in Firestore.");
       }
     } catch (e) {
-      print("Login failed: $e");
+      // print("Login failed: $e");
     }
   }
 

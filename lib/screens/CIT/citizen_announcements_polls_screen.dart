@@ -46,7 +46,6 @@ class CitizenAnnouncementsPollsScreen extends StatelessWidget {
                   itemBuilder: (context, index) {
                     final data = docs[index].data() as Map<String, dynamic>;
                     final date = (data['Time'] as Timestamp?)?.toDate();
-                    final title = data['Title'] ?? 'No title';
                     final info = data['Info'] ?? 'No info';
                     final location = data['Location'] ?? 'No location';
 
@@ -115,7 +114,7 @@ class CitizenAnnouncementsPollsScreen extends StatelessWidget {
                     final data = docs[index].data() as Map<String, dynamic>;
                     final title = data['Title'] ?? 'Poll';
                     final votes = Map.from(data)..removeWhere((k, v) => k == 'Title' || k == 'Voters');
-                    final totalVotes = votes.values.fold<int>(0, (sum, v) => sum + (v as int? ?? 0));
+                    final totalVotes = votes.values.fold<int>(0, (prev, v) => prev + (v as int? ?? 0));
 
                     return Card(
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
@@ -128,20 +127,13 @@ class CitizenAnnouncementsPollsScreen extends StatelessWidget {
                             Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
                             const SizedBox(height: 8),
                             ...votes.entries.map((entry) {
-                              final label = entry.key;
-                              final count = entry.value ?? 0;
-                              final percent = totalVotes > 0 ? (count / totalVotes * 100).toStringAsFixed(1) : '0';
-                              return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  children: [
-                                    Expanded(child: Text(label)),
-                                    const SizedBox(width: 8),
-                                    Text("$percent%"),
-                                  ],
-                                ),
+                              final option = entry.key;
+                              final count = entry.value;
+                              final percent = totalVotes == 0 ? 0 : (count / totalVotes * 100).toStringAsFixed(1);
+                              return ListTile(
+                                title: Text('$option: $count votes ($percent%)'),
                               );
-                            }).toList(),
+                            }),
                             const SizedBox(height: 8),
                             Center(
                               child: ElevatedButton(

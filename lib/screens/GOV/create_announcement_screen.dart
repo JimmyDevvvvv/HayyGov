@@ -10,14 +10,16 @@ class CreateAnnouncementScreen extends StatefulWidget {
 
 class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
   final _formKey = GlobalKey<FormState>();
-  String title = '';
-  String info = '';
-  String location = '';
+  final _titleController = TextEditingController();
+  final _infoController = TextEditingController();
+  final _locationController = TextEditingController();
 
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
-    _formKey.currentState!.save();
-
+    final title = _titleController.text.trim();
+    final info = _infoController.text.trim();
+    final location = _locationController.text.trim();
+    if (title.isEmpty || info.isEmpty || location.isEmpty) return;
     await FirebaseFirestore.instance.collection('Announcements').add({
       'Title': title,
       'Info': info,
@@ -25,7 +27,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
       'Picture': '',
       'Time': Timestamp.now(),
     });
-
+    if (!mounted) return;
     Navigator.pop(context);
   }
 
@@ -40,18 +42,18 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
           child: Column(
             children: [
               TextFormField(
+                controller: _titleController,
                 decoration: InputDecoration(labelText: 'Title'),
-                onSaved: (val) => title = val ?? '',
                 validator: (val) => val!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
+                controller: _infoController,
                 decoration: InputDecoration(labelText: 'Info'),
-                onSaved: (val) => info = val ?? '',
                 validator: (val) => val!.isEmpty ? 'Required' : null,
               ),
               TextFormField(
+                controller: _locationController,
                 decoration: InputDecoration(labelText: 'Location'),
-                onSaved: (val) => location = val ?? '',
                 validator: (val) => val!.isEmpty ? 'Required' : null,
               ),
               SizedBox(height: 20),

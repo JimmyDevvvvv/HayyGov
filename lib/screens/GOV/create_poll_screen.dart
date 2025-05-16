@@ -11,7 +11,7 @@ class CreatePollScreen extends StatefulWidget {
 class _CreatePollScreenState extends State<CreatePollScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
-  List<TextEditingController> _optionControllers = [
+  final List<TextEditingController> _optionControllers = [
     TextEditingController(),
     TextEditingController(),
   ];
@@ -39,6 +39,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     final options = _optionControllers.map((c) => c.text.trim()).where((o) => o.isNotEmpty).toList();
 
     if (options.length < 2) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("At least two choices are required.")),
       );
@@ -55,6 +56,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     }
 
     await FirebaseFirestore.instance.collection('Polls').add(pollData);
+    if (!mounted) return;
     Navigator.pop(context);
   }
 

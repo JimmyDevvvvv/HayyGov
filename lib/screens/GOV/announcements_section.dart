@@ -112,6 +112,7 @@ class _AnnouncementCreateDialogState extends State<_AnnouncementCreateDialog> {
                 'Picture': '',
                 'Time': Timestamp.now(),
               });
+              if (!context.mounted) return;
               Navigator.pop(context);
             }
           },

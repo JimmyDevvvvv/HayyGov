@@ -24,6 +24,7 @@ class _EmergencyNState extends State<EmergencyN> {
 
   void _loadOfflineContacts() async {
     final contacts = await firestoreService.getContactsOffline();
+    if (!mounted) return;
     setState(() {
       _offlineContacts = contacts;
     });
@@ -32,6 +33,7 @@ class _EmergencyNState extends State<EmergencyN> {
   Future<void> _reloadContacts() async {
     // Reload contacts from Firestore and update UI
     final contacts = await firestoreService.getContacts();
+    if (!mounted) return;
     setState(() {
       _offlineContacts = contacts;
     });
@@ -74,6 +76,7 @@ class _EmergencyNState extends State<EmergencyN> {
                     iconUrl: iconUrl,
                   );
                   await firestoreService.addContact(newContact);
+                  if (!context.mounted) return;
                   Navigator.pop(context);
                 },
                 child: Text('Save'),
@@ -87,6 +90,8 @@ class _EmergencyNState extends State<EmergencyN> {
 
   void _deleteEmergencyContact(EmergencyContact contact) async {
     await firestoreService.deleteContact(contact.id);
+    if (!mounted) return;
+    setState(() {});
   }
 
   @override

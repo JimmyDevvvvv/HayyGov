@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AdvertiserDashboardScreen extends StatelessWidget {
+  const AdvertiserDashboardScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
