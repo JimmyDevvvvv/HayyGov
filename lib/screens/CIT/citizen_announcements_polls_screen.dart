@@ -1,11 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class CitizenAnnouncementsPollsScreen extends StatelessWidget {
+import '../../models/announcement.dart';
+import '../../services/announcement_service.dart';
+import 'announcement_detail_screen.dart';
+
+class CitizenAnnouncementsPollsScreen extends StatefulWidget {
   const CitizenAnnouncementsPollsScreen({super.key});
 
   @override
+  State<CitizenAnnouncementsPollsScreen> createState() =>
+      _CitizenAnnouncementsPollsScreenState();
+}
+
+class _CitizenAnnouncementsPollsScreenState
+    extends State<CitizenAnnouncementsPollsScreen> {
+  final announcementService = AnnouncementService();
+
+  @override
   Widget build(BuildContext context) {
+    final userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+
     return Scaffold(
       backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(

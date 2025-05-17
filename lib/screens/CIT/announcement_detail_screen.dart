@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../../models/announcement.dart';
 import '../../models/comment.dart';
 import '../../services/announcement_service.dart';
@@ -9,7 +10,8 @@ class AnnouncementDetailScreen extends StatefulWidget {
   const AnnouncementDetailScreen({super.key, required this.announcement});
 
   @override
-  State<AnnouncementDetailScreen> createState() => _AnnouncementDetailScreenState();
+  State<AnnouncementDetailScreen> createState() =>
+      _AnnouncementDetailScreenState();
 }
 
 class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
@@ -17,68 +19,127 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
   final _controller = TextEditingController();
   bool anonymous = false;
 
+  String _formatDate(DateTime dateTime) {
+    return DateFormat('yyyy/MM/dd HH:mm').format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final a = widget.announcement;
+    final hasImage = a.picture.isNotEmpty;
+    final hasEndTime = a.endTime != null;
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.announcement.title)),
+      appBar: AppBar(title: Text(a.title)),
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: Text(widget.announcement.info),
-          ),
           Expanded(
-            child: StreamBuilder<List<CommentModel>>(
-              stream: service.getComments(widget.announcement.id),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return Center(child: CircularProgressIndicator());
-                final comments = snapshot.data!;
-                return ListView.builder(
-                  itemCount: comments.length,
-                  itemBuilder: (context, index) {
-                    final c = comments[index];
-                    return ListTile(
-                      title: Text(c.author),
-                      subtitle: Text(c.text),
-                      trailing: Text('${c.timestamp.hour}:${c.timestamp.minute}'),
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                if (hasImage)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      a.picture,
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const SizedBox(),
+                    ),
+                  ),
+                const SizedBox(height: 16),
+                Text(
+                  a.info,
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  "📍 ${a.location}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  hasEndTime
+                      ? "🕒 ${_formatDate(a.timestamp)} → ${_formatDate(a.endTime!)}"
+                      : "🕒 ${_formatDate(a.timestamp)}",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const Divider(height: 30),
+                const Text("Comments",
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const SizedBox(height: 10),
+                StreamBuilder<List<CommentModel>>(
+                  stream: service.getComments(a.id),
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final comments = snapshot.data!;
+                    if (comments.isEmpty) {
+                      return const Text("No comments yet.");
+                    }
+                    return ListView.separated(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: comments.length,
+                      separatorBuilder: (_, __) =>
+                          const Divider(color: Colors.grey),
+                      itemBuilder: (context, index) {
+                        final c = comments[index];
+                        return ListTile(
+                          title: Text(c.author),
+                          subtitle: Text(c.text),
+                          trailing: Text(
+                              "${c.timestamp.hour}:${c.timestamp.minute.toString().padLeft(2, '0')}"),
+                        );
+                      },
                     );
                   },
-                );
-              },
+                ),
+              ],
             ),
           ),
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(hintText: 'Write a comment...'),
-                ),
-              ),
-              Column(
-                children: [
-                  Text("Anon"),
-                  Switch(
-                    value: anonymous,
-                    onChanged: (val) => setState(() => anonymous = val),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            color: Colors.grey[100],
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration:
+                        const InputDecoration(hintText: 'Write a comment...'),
                   ),
-                ],
-              ),
-              IconButton(
-                icon: Icon(Icons.send),
-                onPressed: () async {
-                  final text = _controller.text.trim();
-                  if (text.isEmpty) return;
-                  final comment = CommentModel(
-                    text: text,
-                    author: anonymous ? "Anonymous" : "You", // Replace with username if needed
-                    timestamp: DateTime.now(),
-                  );
-                  await service.addComment(widget.announcement.id, comment);
-                  _controller.clear();
-                },
-              ),
-            ],
+                ),
+                Column(
+                  children: [
+                    const Text("Anon"),
+                    Switch(
+                      value: anonymous,
+                      onChanged: (val) =>
+                          setState(() => anonymous = val),
+                    ),
+                  ],
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: () async {
+                    final text = _controller.text.trim();
+                    if (text.isEmpty) return;
+                    final comment = CommentModel(
+                      text: text,
+                      author: anonymous ? "Anonymous" : "You",
+                      timestamp: DateTime.now(),
+                    );
+                    await service.addComment(a.id, comment);
+                    _controller.clear();
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),
