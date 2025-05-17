@@ -14,6 +14,7 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   bool obscurePassword = true;
+  bool isLoading = false;
 
   @override
   void dispose() {
@@ -23,12 +24,33 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> login() async {
-    final authProvider = Provider.of<AuthProvider>(context, listen: false);
-    await authProvider.login(
-      emailController.text.trim(),
-      passwordController.text.trim(),
-      context,
-    );
+    setState(() {
+      isLoading = true;
+    });
+
+    try {
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+      await authProvider.login(
+        emailController.text.trim(),
+        passwordController.text.trim(),
+        context,
+      );
+
+      if (!mounted) return;
+
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("An unexpected error occurred.")),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          isLoading = false;
+        });
+      }
+    }
   }
 
   void navigateToSignUp() {
@@ -46,11 +68,11 @@ class _LoginScreenState extends State<LoginScreen> {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/images/bg.png', // Replace with your actual background image path
+              'assets/images/bg.png',
               fit: BoxFit.cover,
             ),
           ),
-          // Dark overlay
+          // White overlay
           Positioned.fill(
             child: Container(color: Colors.white.withOpacity(0.5)),
           ),
@@ -135,46 +157,49 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Bottom buttons: Login (right), Sign-up (left)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      // Sign-up button (left)
-                      ElevatedButton(
-                        onPressed: navigateToSignUp,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Column(
+
+                  // Bottom buttons or loading spinner
+                  isLoading
+                      ? const CircularProgressIndicator()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            Text('Sign-up', style: TextStyle(color: Colors.white)),
-                            Text('التسجيل', style: TextStyle(color: Colors.white)),
+                            // Sign-up button
+                            ElevatedButton(
+                              onPressed: navigateToSignUp,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: const Column(
+                                children: [
+                                  Text('Sign-up', style: TextStyle(color: Colors.white)),
+                                  Text('التسجيل', style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
+                            // Login button
+                            ElevatedButton(
+                              onPressed: login,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                              ),
+                              child: const Column(
+                                children: [
+                                  Text('Login', style: TextStyle(color: Colors.white)),
+                                  Text('الدخول', style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                      // Login button (right)
-                      ElevatedButton(
-                        onPressed: login,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
-                          ),
-                        ),
-                        child: const Column(
-                          children: [
-                            Text('Login', style: TextStyle(color: Colors.white)),
-                            Text('الدخول', style: TextStyle(color: Colors.white)),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),
