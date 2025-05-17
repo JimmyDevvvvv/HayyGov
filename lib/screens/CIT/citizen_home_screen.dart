@@ -16,29 +16,15 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    CitizenAnnouncementsPollsScreen(), // 0
-    HomeScreen(),                      // 1
-    const SizedBox.shrink(),          // 2 - Chat
-    const SizedBox.shrink(),          // 3 - Report
-    const AdFeedScreen(),             // 4
+    CitizenAnnouncementsPollsScreen(),        // 0 - Announcements
+    HomeScreen(),                              // 1 - Emergency
+    ChatScreen(senderRole: "citizen"),         // 2 - Chat
+    ReportFormScreen(),                        // 3 - Report
+    AdFeedScreen(),                            // 4 - Ads
   ];
 
   void _handleNavigation(int index) {
-    if (index == 2) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ChatScreen(senderRole: "citizen"),
-        ),
-      );
-    } else if (index == 3) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const ReportFormScreen(),
-        ),
-      );
-    } else if (index < _screens.length) {
+    if (index < _screens.length) {
       setState(() => _currentIndex = index);
     }
   }
@@ -46,13 +32,13 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromRGBO(221, 203, 183, 1),
+      backgroundColor: const Color(0xFFD6C4B0),
       body: Column(
         children: [
           const SizedBox(height: 30), // for status bar space
           // 🔼 Top Navigation Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -106,17 +92,17 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
                       // Message
                       IconButton(
                         onPressed: () => _handleNavigation(2),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.message,
-                          color: Colors.black,
+                          color: _currentIndex == 2 ? Colors.black : Colors.black45,
                         ),
                       ),
                       // Report
                       IconButton(
                         onPressed: () => _handleNavigation(3),
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.report,
-                          color: Colors.black,
+                          color: _currentIndex == 3 ? Colors.black : Colors.black45,
                         ),
                       ),
                       // Ads
