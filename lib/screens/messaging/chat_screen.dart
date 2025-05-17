@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .orderBy("timestamp", descending: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF0EDEB),
+      backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(
         title: const Text("Chat with Gov"),
         backgroundColor: Colors.brown,
