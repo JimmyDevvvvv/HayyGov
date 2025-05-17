@@ -4,6 +4,7 @@ class Announcement {
   final String location;
   final String picture;
   final DateTime timestamp;
+  final DateTime? endTime;
   final String id; // Firestore doc ID
 
   Announcement({
@@ -12,6 +13,7 @@ class Announcement {
     required this.location,
     required this.picture,
     required this.timestamp,
+    this.endTime,
     required this.id,
   });
 
@@ -22,6 +24,7 @@ class Announcement {
       location: data['Location'] ?? '',
       picture: data['Picture'] ?? '',
       timestamp: data['Time'].toDate(),
+      endTime: data['EndTime']?.toDate(),
       id: id,
     );
   }

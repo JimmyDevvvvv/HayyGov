@@ -4,7 +4,7 @@ import 'emergency_n.dart';
 import '../messaging/admin_inbox_screen.dart';
 import '../report/report_list_screen.dart';
 import '../AD/ad_approval_screen.dart';
-import 'announcements_section.dart';
+import 'announcement_feed_screen.dart';
 
 class GovernmentMainScreen extends StatefulWidget {
   const GovernmentMainScreen({super.key});
@@ -59,7 +59,7 @@ class _GovDashboard extends StatelessWidget {
           leading: const Icon(Icons.announcement),
           title: const Text('Announcements'),
           onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => AnnouncementsSection()),
+            MaterialPageRoute(builder: (_) => AnnouncementFeedScreen()),
           ),
         ),
         ListTile(
