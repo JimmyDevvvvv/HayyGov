@@ -13,6 +13,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   String selectedRole = 'citizen'; // Default role
+  bool obscurePassword = true;
 
   Future<void> _signUp() async {
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
@@ -32,41 +33,158 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sign Up')),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: emailController,
-              decoration: const InputDecoration(labelText: 'Email'),
+      body: Stack(
+        children: [
+          // Background image
+          Positioned.fill(
+            child: Image.asset(
+              'assets/images/bg.png', // Same path as login screen
+              fit: BoxFit.cover,
             ),
-            TextField(
-              controller: passwordController,
-              decoration: const InputDecoration(labelText: 'Password'),
-              obscureText: true,
+          ),
+          // White overlay
+          Positioned.fill(
+            child: Container(color: Colors.white.withOpacity(0.5)),
+          ),
+          Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Text(
+                    'HayyGov',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                  const SizedBox(height: 40),
+
+                  // Email labels
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Email', style: TextStyle(color: Colors.black)),
+                      Text('البريد الإلكتروني', style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Email field
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                    ),
+                    child: TextField(
+                      controller: emailController,
+                      decoration: const InputDecoration(
+                        hintText: '@',
+                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Password labels
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Password', style: TextStyle(color: Colors.black)),
+                      Text('كلمة السر', style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Password field
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                    ),
+                    child: TextField(
+                      controller: passwordController,
+                      obscureText: obscurePassword,
+                      decoration: InputDecoration(
+                        hintText: '🔑',
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                        border: InputBorder.none,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            obscurePassword ? Icons.visibility : Icons.visibility_off,
+                          ),
+                          onPressed: () {
+                            setState(() => obscurePassword = !obscurePassword);
+                          },
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Role selection label
+                  const Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Role', style: TextStyle(color: Colors.black)),
+                      Text('الدور', style: TextStyle(color: Colors.black)),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Role Dropdown
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                    ),
+                    child: DropdownButton<String>(
+                      value: selectedRole,
+                      underline: const SizedBox(),
+                      isExpanded: true,
+                      items: const [
+                        DropdownMenuItem(value: 'citizen', child: Text('Citizen')),
+                        DropdownMenuItem(value: 'advertiser', child: Text('Advertiser')),
+                      ],
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() => selectedRole = value);
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+
+                  // Sign-up Button
+                  ElevatedButton(
+                    onPressed: _signUp,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                    ),
+                    child: const Column(
+                      children: [
+                        Text('Sign-up', style: TextStyle(color: Colors.white)),
+                        Text('التسجيل', style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(height: 20),
-            DropdownButton<String>(
-              value: selectedRole,
-              items: const [
-                DropdownMenuItem(value: 'citizen', child: Text('Citizen')),
-                DropdownMenuItem(value: 'advertiser', child: Text('Advertiser')),
-              ],
-              onChanged: (value) {
-                if (value != null) {
-                  setState(() {
-                    selectedRole = value;
-                  });
-                }
-              },
-            ),
-            ElevatedButton(
-              onPressed: _signUp,
-              child: const Text('Sign Up'),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
