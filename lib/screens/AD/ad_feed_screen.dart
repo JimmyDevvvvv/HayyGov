@@ -12,8 +12,11 @@ class AdFeedScreen extends StatelessWidget {
         .orderBy('timestamp', descending: true);
 
     return Scaffold(
+       backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(
         title: const Text("Neighborhood Ads"),
+        backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: approvedAdsRef.snapshots(),
