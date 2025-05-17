@@ -24,7 +24,7 @@ class Announcement {
       location: data['Location'] ?? '',
       picture: data['Picture'] ?? '',
       timestamp: data['Time'].toDate(),
-      endTime: data['EndTime'] != null ? data['EndTime'].toDate() : null,
+      endTime: data['EndTime']?.toDate(),
       id: id,
     );
   }

@@ -13,6 +13,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   final _titleController = TextEditingController();
   final _descController = TextEditingController();
   final _imageUrlController = TextEditingController();
+  final _locationController = TextEditingController();
   bool _isUploading = false;
 
   final _auth = FirebaseAuth.instance;
@@ -22,6 +23,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     final title = _titleController.text.trim();
     final description = _descController.text.trim();
     final imageUrl = _imageUrlController.text.trim();
+    final location = _locationController.text.trim();
 
     if (title.isEmpty || description.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -38,6 +40,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
         'title': title,
         'description': description,
         'imageUrl': imageUrl,
+        'location': location,
         'approved': false,
         'timestamp': Timestamp.now(),
       });
@@ -48,6 +51,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
       _titleController.clear();
       _descController.clear();
       _imageUrlController.clear();
+      _locationController.clear();
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
@@ -79,6 +83,11 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
             TextField(
               controller: _imageUrlController,
               decoration: const InputDecoration(labelText: "Image URL (link)"),
+            ),
+            const SizedBox(height: 10),
+            TextField(
+              controller: _locationController,
+              decoration: const InputDecoration(labelText: "Location (optional)"),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(

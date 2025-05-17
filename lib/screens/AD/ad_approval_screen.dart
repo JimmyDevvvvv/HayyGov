@@ -41,6 +41,7 @@ class AdApprovalScreen extends StatelessWidget {
               final title = data['title'];
               final desc = data['description'];
               final imageUrl = data['imageUrl'];
+              final location = data['location'] ?? '';
               final advertiserId = data['advertiserId'];
 
               return FutureBuilder<DocumentSnapshot>(
@@ -55,20 +56,33 @@ class AdApprovalScreen extends StatelessWidget {
                   }
 
                   return Card(
-                    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: const EdgeInsets.all(12),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ListTile(
-                          title: Text(title),
-                          subtitle: Text(desc),
-                          trailing: Text("From: $advertiserEmail", style: const TextStyle(fontSize: 12)),
+                          title: Text(title ?? ''),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(desc ?? ''),
+                              if (location.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                      const SizedBox(width: 4),
+                                      Text(location, style: const TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                ),
+                              Text('Advertiser: $advertiserEmail', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                            ],
+                          ),
                         ),
                         if (imageUrl != null && imageUrl.isNotEmpty)
-                          Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Image.network(imageUrl, height: 200, fit: BoxFit.cover),
-                          ),
+                          Image.network(imageUrl, height: 200, fit: BoxFit.cover),
                         OverflowBar(
                           alignment: MainAxisAlignment.end,
                           children: [

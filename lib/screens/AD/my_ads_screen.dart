@@ -19,18 +19,26 @@ class MyAdsScreen extends StatelessWidget {
   void _editAd(BuildContext context, String adId, Map<String, dynamic> currentData) {
     final titleController = TextEditingController(text: currentData['title']);
     final descController = TextEditingController(text: currentData['description']);
+    final imageUrlController = TextEditingController(text: currentData['imageUrl'] ?? '');
+    final locationController = TextEditingController(text: currentData['location'] ?? '');
 
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Edit Advertisement"),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: "Title")),
-            const SizedBox(height: 8),
-            TextField(controller: descController, decoration: const InputDecoration(labelText: "Description")),
-          ],
+        title: const Text("Edit Ad"),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextField(controller: titleController, decoration: const InputDecoration(labelText: "Title")),
+              const SizedBox(height: 8),
+              TextField(controller: descController, decoration: const InputDecoration(labelText: "Description")),
+              const SizedBox(height: 8),
+              TextField(controller: imageUrlController, decoration: const InputDecoration(labelText: "Image URL (optional)")),
+              const SizedBox(height: 8),
+              TextField(controller: locationController, decoration: const InputDecoration(labelText: "Location (optional)")),
+            ],
+          ),
         ),
         actions: [
           TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
@@ -40,6 +48,8 @@ class MyAdsScreen extends StatelessWidget {
                 await FirebaseFirestore.instance.collection('ads').doc(adId).update({
                   'title': titleController.text.trim(),
                   'description': descController.text.trim(),
+                  'imageUrl': imageUrlController.text.trim(),
+                  'location': locationController.text.trim(),
                   'approved': false, // Needs re-approval
                   'disapproved': false, // Reset disapproval if any
                   'timestamp': Timestamp.now(),
@@ -91,6 +101,7 @@ class MyAdsScreen extends StatelessWidget {
               final title = ad['title'] ?? '';
               final description = ad['description'] ?? '';
               final imageUrl = ad['imageUrl'];
+              final location = ad['location'] ?? '';
               final approved = ad['approved'] ?? false;
               final disapproved = ad['disapproved'] ?? false;
 
@@ -113,7 +124,23 @@ class MyAdsScreen extends StatelessWidget {
                   children: [
                     ListTile(
                       title: Text(title),
-                      subtitle: Text(description),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(description),
+                          if (location.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4.0),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                  const SizedBox(width: 4),
+                                  Text(location, style: const TextStyle(color: Colors.grey)),
+                                ],
+                              ),
+                            ),
+                        ],
+                      ),
                       trailing: Text(status, style: TextStyle(color: statusColor)),
                     ),
                     if (imageUrl != null && imageUrl.isNotEmpty)

@@ -30,6 +30,7 @@ class AdFeedScreen extends StatelessWidget {
               final title = data['title'] ?? '';
               final desc = data['description'] ?? '';
               final imageUrl = data['imageUrl'];
+              final location = data['location'] ?? '';
               final advertiserId = data['advertiserId'];
 
               return FutureBuilder<DocumentSnapshot>(
@@ -50,7 +51,23 @@ class AdFeedScreen extends StatelessWidget {
                       children: [
                         ListTile(
                           title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
-                          subtitle: Text(desc),
+                          subtitle: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(desc),
+                              if (location.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 4.0),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                      const SizedBox(width: 4),
+                                      Text(location, style: const TextStyle(color: Colors.grey)),
+                                    ],
+                                  ),
+                                ),
+                            ],
+                          ),
                           trailing: Text(displayName, style: const TextStyle(fontSize: 11)),
                         ),
                         if (imageUrl != null && imageUrl.isNotEmpty)
