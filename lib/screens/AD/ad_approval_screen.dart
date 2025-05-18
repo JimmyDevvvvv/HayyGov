@@ -44,125 +44,100 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
         .orderBy('timestamp', descending: true);
 
     final Color bgColor = const Color(0xFFF2E9E1);
-    final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Approve Advertisements"),
-        backgroundColor: bgColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
       backgroundColor: bgColor,
       body: Column(
         children: [
-          // --- HayyGov Header with navigation bar ---
-          Container(
-            margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
-            decoration: BoxDecoration(
-              color: navBrown,
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/header_bg.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF9C7B4B),
-                  BlendMode.srcATop,
-                ),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.13),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+          const SizedBox(height: 30), // for status bar space
+          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/bg.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4),
+                    BlendMode.dstATop,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                  child: Column(
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'HayyGov',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 3,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Center(
-                        child: Text(
-                          "HayyGov",
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black12,
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.campaign,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Announcements',
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: navBrown,
-                          borderRadius: BorderRadius.circular(14),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const EmergencyN()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.phone,
+                          color: Colors.black45,
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Announcements
-                            IconButton(
-                              icon: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 32),
-                              tooltip: 'Announcements',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                                );
-                              },
-                            ),
-                            // Polls
-                            IconButton(
-                              icon: const Icon(Icons.poll, color: Colors.white, size: 32),
-                              tooltip: 'Polls',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const PollsSection()),
-                                );
-                              },
-                            ),
-                            // Emergency
-                            IconButton(
-                              icon: const Icon(Icons.call, color: Colors.red, size: 32),
-                              tooltip: 'Emergency',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const EmergencyN()),
-                                );
-                              },
-                            ),
-                            // Reports
-                            IconButton(
-                              icon: const Icon(Icons.description, color: Colors.white, size: 32),
-                              tooltip: 'Reports',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                                );
-                              },
-                            ),
-                          ],
+                        tooltip: 'Emergency',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const PollsSection()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.poll,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Polls',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.report,
+                          color: Colors.black45,
+                        ),
+                        tooltip: 'Reports',
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           // --- Switch between Ads and Emergency Numbers ---
@@ -216,12 +191,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            if (!showAds) {
-                              setState(() {
-                                showAds = true;
-                              });
-                              // Already on Ads page, do nothing
-                            }
+                            // Already on Ads page, do nothing
                           },
                           child: Center(
                             child: Icon(
@@ -239,7 +209,6 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
             ),
           ),
           // --- End Switch ---
-          // --- End HayyGov Header ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: unapprovedAdsRef.snapshots(),

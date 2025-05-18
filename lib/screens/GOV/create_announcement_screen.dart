@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'announcement_feed_screen.dart';
+import 'polls_section.dart';
+import 'emergency_n.dart';
+import '../report/report_list_screen.dart';
 
 class CreateAnnouncementScreen extends StatefulWidget {
   const CreateAnnouncementScreen({super.key});
@@ -115,48 +119,97 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
         child: ListView(
           padding: const EdgeInsets.all(0),
           children: [
-            // Header
-            Container(
-              height: 120,
-              margin: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: cardColor,
-                borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(
-                  image: AssetImage('assets/header_bg.jpg'),
-                  fit: BoxFit.cover,
+            // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/bg.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black54,
+                      BlendMode.dstATop,
+                    ),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'HayyGov',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        letterSpacing: 3,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.campaign,
+                            color: Colors.black,
+                          ),
+                          tooltip: 'Announcements',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const EmergencyN()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.phone,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Emergency',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const PollsSection()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.poll,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Polls',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.report,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Reports',
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              child: Stack(
-                children: [
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.13),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
-                  ),
-                  Center(
-                    child: Text(
-                      "HayyGov",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: accentColor,
-                        letterSpacing: 2,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black.withOpacity(0.1),
-                            blurRadius: 2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
             ),
+            // --- End HayyGov Header ---
             // Card with form
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12),
