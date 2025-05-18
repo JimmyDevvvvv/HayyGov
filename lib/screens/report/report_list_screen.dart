@@ -15,6 +15,29 @@ class ReportListScreen extends StatefulWidget {
 class _ReportListScreenState extends State<ReportListScreen> {
   bool showInbox = false; // For the switch, false means we're on reports
 
+  void _navigateToInbox(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const AdminInboxScreen(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(-1.0, 0.0), // Slide from left
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe right to go to Inbox
+    if (details.primaryVelocity != null && details.primaryVelocity! > 50) {
+      _navigateToInbox(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final reportsRef = FirebaseFirestore.instance
@@ -117,70 +140,71 @@ class _ReportListScreenState extends State<ReportListScreen> {
           // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: Container(
-              width: 240,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Stack(
-                children: [
-                  AnimatedAlign(
-                    alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 120,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFBDBDBD),
-                        borderRadius: BorderRadius.circular(24),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragEnd: _onHorizontalDrag,
+              child: Container(
+                width: 240,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedAlign(
+                      alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        width: 120,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFBDBDBD),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      // Inbox icon always on the left
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (!showInbox) {
-                              setState(() {
-                                showInbox = true;
-                              });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const AdminInboxScreen()),
-                              );
-                            }
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.inbox,
-                              color: showInbox ? Colors.white : Colors.black,
-                              size: 28,
+                    Row(
+                      children: [
+                        // Inbox icon always on the left
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!showInbox) {
+                                setState(() {
+                                  showInbox = true;
+                                });
+                                _navigateToInbox(context);
+                              }
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.inbox,
+                                color: showInbox ? Colors.white : Colors.black,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      // Reports icon always on the right
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Already on Reports page, do nothing
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.description,
-                              color: showInbox ? Colors.black : Colors.white,
-                              size: 28,
+                        // Reports icon always on the right
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Already on Reports page, do nothing
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.description,
+                                color: showInbox ? Colors.black : Colors.white,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

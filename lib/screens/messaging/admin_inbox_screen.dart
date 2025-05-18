@@ -17,6 +17,29 @@ class AdminInboxScreen extends StatefulWidget {
 class _AdminInboxScreenState extends State<AdminInboxScreen> {
   bool showInbox = true; // For the switch
 
+  void _navigateToReports(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const ReportListScreen(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(1.0, 0.0), // Slide from right
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe left to go to Reports
+    if (details.primaryVelocity != null && details.primaryVelocity! < -50) {
+      _navigateToReports(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final chatStream = FirebaseFirestore.instance
@@ -125,70 +148,66 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
           // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: Container(
-              width: 240,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Stack(
-                children: [
-                  AnimatedAlign(
-                    alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 120,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFBDBDBD),
-                        borderRadius: BorderRadius.circular(24),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragEnd: _onHorizontalDrag,
+              child: Container(
+                width: 240,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedAlign(
+                      alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        width: 120,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFBDBDBD),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      // Inbox icon always on the left
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Already on Inbox page, do nothing
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.inbox,
-                              color: showInbox ? Colors.white : Colors.black,
-                              size: 28,
+                    Row(
+                      children: [
+                        // Inbox icon always on the left
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Already on Inbox page, do nothing
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.inbox,
+                                color: showInbox ? Colors.white : Colors.black,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      // Reports icon always on the right
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (showInbox) {
-                              setState(() {
-                                showInbox = false;
-                              });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                              );
-                            }
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.description,
-                              color: showInbox ? Colors.black : Colors.white,
-                              size: 28,
+                        // Reports icon always on the right
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _navigateToReports(context);
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.description,
+                                color: showInbox ? Colors.black : Colors.white,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

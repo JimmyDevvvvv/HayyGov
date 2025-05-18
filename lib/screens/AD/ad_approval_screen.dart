@@ -36,6 +36,29 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
     });
   }
 
+  void _navigateToEmergencyN(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const EmergencyN(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(-1.0, 0.0), // Slide from left
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe right to go to EmergencyN
+    if (details.primaryVelocity != null && details.primaryVelocity! > 200) {
+      _navigateToEmergencyN(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final unapprovedAdsRef = FirebaseFirestore.instance
@@ -173,10 +196,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                               setState(() {
                                 showAds = false;
                               });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const EmergencyN()),
-                              );
+                              _navigateToEmergencyN(context);
                             }
                           },
                           child: Center(
@@ -210,173 +230,177 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
           ),
           // --- End Switch ---
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: unapprovedAdsRef.snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragEnd: _onHorizontalDrag,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: unapprovedAdsRef.snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
 
-                final docs = snapshot.data!.docs;
-                if (docs.isEmpty) return const Center(child: Text("No ads awaiting approval."));
+                  final docs = snapshot.data!.docs;
+                  if (docs.isEmpty) return const Center(child: Text("No ads awaiting approval."));
 
-                return ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    final data = docs[index].data() as Map<String, dynamic>;
-                    final adId = docs[index].id;
-                    final title = data['title'];
-                    final desc = data['description'];
-                    final imageUrl = data['imageUrl'];
-                    final location = data['location'] ?? '';
-                    final advertiserId = data['advertiserId'];
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      final adId = docs[index].id;
+                      final title = data['title'];
+                      final desc = data['description'];
+                      final imageUrl = data['imageUrl'];
+                      final location = data['location'] ?? '';
+                      final advertiserId = data['advertiserId'];
 
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance.collection('users').doc(advertiserId).get(),
-                      builder: (context, userSnapshot) {
-                        String advertiserEmail = advertiserId;
-                        if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
-                          final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                          if (userData != null && userData.containsKey('email')) {
-                            advertiserEmail = userData['email'];
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance.collection('users').doc(advertiserId).get(),
+                        builder: (context, userSnapshot) {
+                          String advertiserEmail = advertiserId;
+                          if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
+                            final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                            if (userData != null && userData.containsKey('email')) {
+                              advertiserEmail = userData['email'];
+                            }
                           }
-                        }
 
-                        final isApproved = approvedAdId == adId;
-                        final isRejected = rejectedAdId == adId;
+                          final isApproved = approvedAdId == adId;
+                          final isRejected = rejectedAdId == adId;
 
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Top row: status icon, title, image
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Status icon
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4.0, right: 4.0),
-                                      child: isApproved
-                                          ? const Icon(Icons.check_circle, color: Colors.green, size: 26)
-                                          : isRejected
-                                              ? const Icon(Icons.cancel, color: Colors.red, size: 26)
-                                              : const SizedBox(width: 26),
-                                    ),
-                                    const SizedBox(width: 2),
-                                    // Title and desc
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            title ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            desc ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(fontSize: 15),
-                                          ),
-                                          if (location.isNotEmpty)
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: Row(
-                                                children: [
-                                                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                                                  const SizedBox(width: 4),
-                                                  Text(location, style: const TextStyle(color: Colors.grey)),
-                                                ],
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Top row: status icon, title, image
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Status icon
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4.0, right: 4.0),
+                                        child: isApproved
+                                            ? const Icon(Icons.check_circle, color: Colors.green, size: 26)
+                                            : isRejected
+                                                ? const Icon(Icons.cancel, color: Colors.red, size: 26)
+                                                : const SizedBox(width: 26),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      // Title and desc
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              title ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
                                               ),
                                             ),
-                                          Text(
-                                            'Advertiser: $advertiserEmail',
-                                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              desc ?? '',
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(fontSize: 15),
+                                            ),
+                                            if (location.isNotEmpty)
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                                    const SizedBox(width: 4),
+                                                    Text(location, style: const TextStyle(color: Colors.grey)),
+                                                  ],
+                                                ),
+                                              ),
+                                            Text(
+                                              'Advertiser: $advertiserEmail',
+                                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      // Image
+                                      if (imageUrl != null && imageUrl.isNotEmpty)
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            imageUrl,
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                const SizedBox(width: 80, height: 80),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    // Image
-                                    if (imageUrl != null && imageUrl.isNotEmpty)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          imageUrl,
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              const SizedBox(width: 80, height: 80),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Approve/Reject buttons row
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // Approve button
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isApproved ? Colors.black : Colors.transparent,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: isApproved ? Colors.green.withOpacity(0.12) : Colors.transparent,
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.thumb_up,
+                                            color: Colors.green, // Always green
+                                            size: 32,
+                                          ),
+                                          onPressed: () => _approveAd(adId),
                                         ),
                                       ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                // Approve/Reject buttons row
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // Approve button
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: isApproved ? Colors.black : Colors.transparent,
-                                          width: 2,
+                                      const SizedBox(width: 18),
+                                      // Reject button
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isRejected ? Colors.black : Colors.transparent,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: isRejected ? Colors.red.withOpacity(0.12) : Colors.transparent,
                                         ),
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: isApproved ? Colors.green.withOpacity(0.12) : Colors.transparent,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.thumb_up,
-                                          color: Colors.green, // Always green
-                                          size: 32,
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.thumb_down,
+                                            color: Colors.red, // Always red
+                                            size: 32,
+                                          ),
+                                          onPressed: () => _deleteAd(adId),
                                         ),
-                                        onPressed: () => _approveAd(adId),
                                       ),
-                                    ),
-                                    const SizedBox(width: 18),
-                                    // Reject button
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: isRejected ? Colors.black : Colors.transparent,
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: isRejected ? Colors.red.withOpacity(0.12) : Colors.transparent,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.thumb_down,
-                                          color: Colors.red, // Always red
-                                          size: 32,
-                                        ),
-                                        onPressed: () => _deleteAd(adId),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ],
