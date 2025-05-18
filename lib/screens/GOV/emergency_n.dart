@@ -6,6 +6,7 @@ import '../../widgets/contact_card.dart';
 import 'announcement_feed_screen.dart';
 import 'polls_section.dart';
 import '../report/report_list_screen.dart';
+import '../AD/ad_approval_screen.dart';
 
 class EmergencyN extends StatefulWidget {
   const EmergencyN({super.key});
@@ -18,6 +19,8 @@ class _EmergencyNState extends State<EmergencyN> {
   final FirestoreService firestoreService = FirestoreService();
   final Uuid uuid = Uuid();
   List<EmergencyContact> _offlineContacts = [];
+
+  bool showAds = false; // For the switch
 
   @override
   void initState() {
@@ -109,6 +112,9 @@ class _EmergencyNState extends State<EmergencyN> {
             Navigator.pop(context);
           },
         ),
+        backgroundColor: const Color(0xFFD6C4B0),
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       backgroundColor: const Color(0xFFD6C4B0),
       body: Column(
@@ -217,7 +223,71 @@ class _EmergencyNState extends State<EmergencyN> {
               ],
             ),
           ),
-          // --- End HayyGov Header ---
+          // --- Switch between Emergency Numbers and Ads Approval ---
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18.0),
+            child: Container(
+              width: 240,
+              height: 48,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+              ),
+              child: Stack(
+                children: [
+                  AnimatedAlign(
+                    alignment: showAds ? Alignment.centerRight : Alignment.centerLeft,
+                    duration: const Duration(milliseconds: 200),
+                    child: Container(
+                      width: 120,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFBDBDBD),
+                        borderRadius: BorderRadius.circular(24),
+                      ),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Do nothing, already on Emergency page
+                          },
+                          child: Center(
+                            child: Icon(
+                              Icons.call,
+                              color: !showAds ? Colors.white : Colors.black,
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            // Navigate to AdApprovalScreen when pressing the right side
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const AdApprovalScreen()),
+                            );
+                          },
+                          child: Center(
+                            child: Icon(
+                              Icons.check_circle,
+                              color: !showAds ? Colors.green : Colors.white, // Green when not selected
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          // --- End Switch ---
           Expanded(
             child: RefreshIndicator(
               onRefresh: _reloadContacts,
