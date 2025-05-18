@@ -21,9 +21,9 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
   Future<void> _pickDateTime({
     required BuildContext context,
     required Function(DateTime) onPicked,
-    required String label,
+    DateTime? initialDateTime,
   }) async {
-    final now = DateTime.now();
+    final now = initialDateTime ?? DateTime.now();
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: now,
@@ -93,64 +93,271 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
     }
   }
 
+  String _formatDateTime(DateTime? dateTime) {
+    if (dateTime == null) return '';
+    final date = "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+    final time = "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}";
+    return "$date $time";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color cardColor = Colors.white;
+    final Color borderColor = const Color(0xFFD6CFC7);
+    final Color accentColor = const Color(0xFF22211F);
+    final Color chipBg = const Color(0xFFF6F4F2);
+    final Color submitBg = const Color(0xFF22211F);
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Announcement")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
+      backgroundColor: bgColor,
+      body: SafeArea(
         child: ListView(
+          padding: const EdgeInsets.all(0),
           children: [
-            TextField(
-              controller: _titleController,
-              decoration: const InputDecoration(labelText: 'Title'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _infoController,
-              maxLines: 3,
-              decoration: const InputDecoration(labelText: 'Description'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _locationController,
-              decoration: const InputDecoration(labelText: 'Location'),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: _imageUrlController,
-              decoration: const InputDecoration(labelText: 'Image URL'),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.access_time),
-              label: Text(_startDateTime == null
-                  ? "Pick Start Time"
-                  : "Start: ${_startDateTime.toString()}"),
-              onPressed: () => _pickDateTime(
-                context: context,
-                label: "Start Time",
-                onPicked: (value) => setState(() => _startDateTime = value),
+            // Header
+            Container(
+              height: 120,
+              margin: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: cardColor,
+                borderRadius: BorderRadius.circular(20),
+                image: const DecorationImage(
+                  image: AssetImage('assets/header_bg.jpg'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.13),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: Text(
+                      "HayyGov",
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                        color: accentColor,
+                        letterSpacing: 2,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 2,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 10),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.access_time),
-              label: Text(_endDateTime == null
-                  ? "Pick End Time (optional)"
-                  : "End: ${_endDateTime.toString()}"),
-              onPressed: () => _pickDateTime(
-                context: context,
-                label: "End Time",
-                onPicked: (value) => setState(() => _endDateTime = value),
+            // Card with form
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: cardColor,
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: borderColor, width: 2),
+                ),
+                padding: const EdgeInsets.all(18),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    // Title field: both Arabic and English in one box
+                    TextField(
+                      controller: _titleController,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: 'Enter title... / ...أدخل العنوان',
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    // Image URL input only (no preview or arrow)
+                    TextField(
+                      controller: _imageUrlController,
+                      decoration: InputDecoration(
+                        hintText: 'Image URL...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                      ),
+                      onChanged: (_) => setState(() {}),
+                    ),
+                    const SizedBox(height: 18),
+                    // Start and End DateTime pickers with calendar icon
+                    Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            readOnly: true,
+                            controller: TextEditingController(
+                              text: _formatDateTime(_startDateTime),
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'Start date & time...',
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.calendar_today, color: accentColor),
+                                onPressed: () async {
+                                  await _pickDateTime(
+                                    context: context,
+                                    onPicked: (dateTime) {
+                                      setState(() {
+                                        _startDateTime = dateTime;
+                                      });
+                                    },
+                                    initialDateTime: _startDateTime,
+                                  );
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            readOnly: true,
+                            controller: TextEditingController(
+                              text: _formatDateTime(_endDateTime),
+                            ),
+                            decoration: InputDecoration(
+                              hintText: 'End date & time...',
+                              prefixIcon: IconButton(
+                                icon: Icon(Icons.calendar_today, color: accentColor),
+                                onPressed: () async {
+                                  await _pickDateTime(
+                                    context: context,
+                                    onPicked: (dateTime) {
+                                      setState(() {
+                                        _endDateTime = dateTime;
+                                      });
+                                    },
+                                    initialDateTime: _endDateTime,
+                                  );
+                                },
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    // Time & Date label
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Time & Date",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: accentColor,
+                          ),
+                        ),
+                        Text(
+                          "الوقت والتاريخ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: accentColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    // Location field
+                    Row(
+                      children: [
+                        Icon(Icons.location_on, color: accentColor),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: TextField(
+                            controller: _locationController,
+                            decoration: InputDecoration(
+                              hintText: 'Location',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    // Description field: both Arabic and English in one box
+                    TextField(
+                      controller: _infoController,
+                      maxLines: 3,
+                      textAlign: TextAlign.center,
+                      decoration: InputDecoration(
+                        hintText: 'Description... / ...وصف',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                        hintStyle: TextStyle(
+                          color: Colors.grey[600],
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            const SizedBox(height: 30),
-            ElevatedButton.icon(
-              icon: const Icon(Icons.send),
-              label: const Text("Submit"),
-              onPressed: _submit,
+            const SizedBox(height: 24),
+            // Submit button
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 60),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: submitBg,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  elevation: 0,
+                ),
+                onPressed: _submit,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Submit",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      "تقديم",
+                      style: TextStyle(fontSize: 18, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
             ),
+            const SizedBox(height: 18),
           ],
         ),
       ),
