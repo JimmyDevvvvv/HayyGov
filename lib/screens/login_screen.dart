@@ -56,148 +56,134 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          // Background image
-          Positioned.fill(
-            child: Image.asset(
-              'assets/images/bg.png',
-              fit: BoxFit.cover,
-            ),
-          ),
-          // White overlay
-          Positioned.fill(
-            child: Container(color: Colors.white.withOpacity(0.5)),
-          ),
-          Center(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              const Text(
+                'HayyGov',
+                style: TextStyle(
+                  fontSize: 40,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 40),
+
+              // Email labels
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'HayyGov',
-                    style: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 2,
-                    ),
-                  ),
-                  const SizedBox(height: 40),
-
-                  // Email labels
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Email', style: TextStyle(color: Colors.black)),
-                      Text('البريد الإلكتروني', style: TextStyle(color: Colors.black)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Email field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
-                    ),
-                    child: TextField(
-                      controller: emailController,
-                      decoration: const InputDecoration(
-                        hintText: '@',
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16),
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Password labels
-                  const Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text('Password', style: TextStyle(color: Colors.black)),
-                      Text('كلمة السر', style: TextStyle(color: Colors.black)),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-
-                  // Password field
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
-                    ),
-                    child: TextField(
-                      controller: passwordController,
-                      obscureText: obscurePassword,
-                      decoration: InputDecoration(
-                        hintText: '🔑',
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-                        border: InputBorder.none,
-                        suffixIcon: IconButton(
-                          icon: Icon(
-                            obscurePassword ? Icons.visibility : Icons.visibility_off,
-                          ),
-                          onPressed: () {
-                            setState(() => obscurePassword = !obscurePassword);
-                          },
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Bottom buttons or loading spinner
-                  isLoading
-                      ? const CircularProgressIndicator()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Sign-up button
-                            ElevatedButton(
-                              onPressed: widget.onSignUpTap,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: const Column(
-                                children: [
-                                  Text('Sign-up', style: TextStyle(color: Colors.white)),
-                                  Text('التسجيل', style: TextStyle(color: Colors.white)),
-                                ],
-                              ),
-                            ),
-                            // Login button
-                            ElevatedButton(
-                              onPressed: login,
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(50),
-                                ),
-                              ),
-                              child: const Column(
-                                children: [
-                                  Text('Login', style: TextStyle(color: Colors.white)),
-                                  Text('الدخول', style: TextStyle(color: Colors.white)),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
+                  Text('Email', style: TextStyle(color: Colors.black)),
+                  Text('البريد الإلكتروني', style: TextStyle(color: Colors.black)),
                 ],
               ),
-            ),
+              const SizedBox(height: 8),
+
+              // Email field
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                ),
+                child: TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
+                    hintText: '@',
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Password labels
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Password', style: TextStyle(color: Colors.black)),
+                  Text('كلمة السر', style: TextStyle(color: Colors.black)),
+                ],
+              ),
+              const SizedBox(height: 8),
+
+              // Password field
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 4)],
+                ),
+                child: TextField(
+                  controller: passwordController,
+                  obscureText: obscurePassword,
+                  decoration: InputDecoration(
+                    hintText: '🔑',
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    border: InputBorder.none,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        obscurePassword ? Icons.visibility : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() => obscurePassword = !obscurePassword);
+                      },
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              // Bottom buttons or loading spinner
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        // Sign-up button
+                        ElevatedButton(
+                          onPressed: widget.onSignUpTap,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          child: const Column(
+                            children: [
+                              Text('Sign-up', style: TextStyle(color: Colors.white)),
+                              Text('التسجيل', style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                        // Login button
+                        ElevatedButton(
+                          onPressed: login,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.black,
+                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50),
+                            ),
+                          ),
+                          child: const Column(
+                            children: [
+                              Text('Login', style: TextStyle(color: Colors.white)),
+                              Text('الدخول', style: TextStyle(color: Colors.white)),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

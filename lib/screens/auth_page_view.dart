@@ -44,7 +44,7 @@ class _AuthPageViewState extends State<AuthPageView> {
           Positioned.fill(
             child: Container(color: Colors.white.withOpacity(0.5)),
           ),
-          // Main content
+          // Main content (PageView and buttons)
           Column(
             children: [
               Expanded(
@@ -64,19 +64,18 @@ class _AuthPageViewState extends State<AuthPageView> {
                   children: [
                     // Login button
                     Expanded(
-                      child: OutlinedButton(
+                      child: ElevatedButton(
                         onPressed: _currentPage == 0 ? null : goToLogin,
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: _currentPage == 0 ? Colors.black : Colors.grey,
-                            width: 2,
-                          ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.black.withOpacity(0.7),
+                          disabledForegroundColor: Colors.white70,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.horizontal(left: Radius.circular(32)),
                           ),
-                          foregroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          backgroundColor: Colors.transparent,
+                          elevation: 0,
                         ),
                         child: Column(
                           children: const [
@@ -86,27 +85,21 @@ class _AuthPageViewState extends State<AuthPageView> {
                         ),
                       ),
                     ),
-                    // Vertical divider
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: Colors.black,
-                    ),
+                    const SizedBox(width: 2),
                     // Signup button
                     Expanded(
-                      child: OutlinedButton(
+                      child: ElevatedButton(
                         onPressed: _currentPage == 1 ? null : goToSignup,
-                        style: OutlinedButton.styleFrom(
-                          side: BorderSide(
-                            color: _currentPage == 1 ? Colors.black : Colors.grey,
-                            width: 2,
-                          ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          foregroundColor: Colors.white,
+                          disabledBackgroundColor: Colors.black.withOpacity(0.7),
+                          disabledForegroundColor: Colors.white70,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.horizontal(right: Radius.circular(32)),
                           ),
-                          foregroundColor: Colors.black,
                           padding: const EdgeInsets.symmetric(vertical: 12),
-                          backgroundColor: Colors.transparent,
+                          elevation: 0,
                         ),
                         child: Column(
                           children: const [
