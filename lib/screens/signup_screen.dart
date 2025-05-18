@@ -74,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: emailController,
                   decoration: const InputDecoration(
                     hintText: '@',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16), // <-- Add vertical padding
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14), // <-- Add vertical padding
                     border: InputBorder.none,
                   ),
                 ),
@@ -104,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: obscurePassword,
                   decoration: InputDecoration(
                     hintText: '🔑',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // <-- Match padding
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14), // <-- Match padding
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -163,7 +163,7 @@ class _SignupScreenState extends State<SignupScreen> {
                 child: ElevatedButton(
                   onPressed: _signUp,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: Color(0xFF2c2c2c),
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
@@ -171,8 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ),
                   child: const Column(
                     children: [
-                      Text('Sign-up', style: TextStyle(color: Colors.white)),
-                      Text('التسجيل', style: TextStyle(color: Colors.white)),
+                      Text('Sign-up   التسجيل', style: TextStyle(color: Colors.white)),
                     ],
                   ),
                 ),

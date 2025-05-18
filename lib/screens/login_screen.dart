@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   controller: emailController,
                   decoration: const InputDecoration(
                     hintText: '@',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     border: InputBorder.none,
                   ),
                 ),
@@ -124,7 +124,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscureText: obscurePassword,
                   decoration: InputDecoration(
                     hintText: '🔑',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -147,16 +147,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       child: ElevatedButton(
                         onPressed: login,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Color(0xFF2c2c2c),
+                          padding: const EdgeInsets.symmetric(vertical: 14),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(50),
+                            borderRadius: BorderRadius.circular(20),
                           ),
                         ),
                         child: const Column(
                           children: [
-                            Text('Login', style: TextStyle(color: Colors.white)),
-                            Text('الدخول', style: TextStyle(color: Colors.white)),
+                            Text('Login   الدخول', style: TextStyle(color: Colors.white)),
                           ],
                         ),
                       ),
