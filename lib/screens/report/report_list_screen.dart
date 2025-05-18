@@ -15,6 +15,29 @@ class ReportListScreen extends StatefulWidget {
 class _ReportListScreenState extends State<ReportListScreen> {
   bool showInbox = false; // For the switch, false means we're on reports
 
+  void _navigateToInbox(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const AdminInboxScreen(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(-1.0, 0.0), // Slide from left
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe right to go to Inbox
+    if (details.primaryVelocity != null && details.primaryVelocity! > 50) {
+      _navigateToInbox(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final reportsRef = FirebaseFirestore.instance
@@ -22,189 +45,166 @@ class _ReportListScreenState extends State<ReportListScreen> {
         .orderBy('timestamp', descending: true);
 
     final Color bgColor = const Color(0xFFF2E9E1);
-    final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("All Submitted Reports"),
-        backgroundColor: bgColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
       backgroundColor: bgColor,
       body: Column(
         children: [
-          // --- HayyGov Header with navigation bar ---
-          Container(
-            margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
-            decoration: BoxDecoration(
-              color: navBrown,
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/header_bg.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF9C7B4B),
-                  BlendMode.srcATop,
-                ),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.13),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          "HayyGov",
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black12,
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: navBrown,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Announcements
-                            IconButton(
-                              icon: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 32),
-                              tooltip: 'Announcements',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                                );
-                              },
-                            ),
-                            // Polls
-                            IconButton(
-                              icon: const Icon(Icons.poll, color: Colors.white, size: 32),
-                              tooltip: 'Polls',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const PollsSection()),
-                                );
-                              },
-                            ),
-                            // Emergency
-                            IconButton(
-                              icon: const Icon(Icons.call, color: Colors.red, size: 32),
-                              tooltip: 'Emergency',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const EmergencyN()),
-                                );
-                              },
-                            ),
-                            // Reports (current)
-                            IconButton(
-                              icon: const Icon(Icons.description, color: Colors.white, size: 32),
-                              tooltip: 'Reports',
-                              onPressed: () {},
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // --- Switch between Inbox and Reports ---
+          const SizedBox(height: 30), // for status bar space
+          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
             child: Container(
-              width: 240,
-              height: 48,
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/bg.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4),
+                    BlendMode.dstATop,
+                  ),
+                ),
               ),
-              child: Stack(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  AnimatedAlign(
-                    alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 120,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFBDBDBD),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
+                  const Text(
+                    'HayyGov',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 3,
                     ),
                   ),
+                  const SizedBox(height: 6),
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // Inbox icon always on the left
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (!showInbox) {
-                              setState(() {
-                                showInbox = true;
-                              });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const AdminInboxScreen()),
-                              );
-                            }
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.inbox,
-                              color: showInbox ? Colors.white : Colors.black,
-                              size: 28,
-                            ),
-                          ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.campaign,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Announcements',
                       ),
-                      // Reports icon always on the right
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Already on Reports page, do nothing
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.description,
-                              color: showInbox ? Colors.black : Colors.white,
-                              size: 28,
-                            ),
-                          ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const EmergencyN()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.phone,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Emergency',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const PollsSection()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.poll,
+                          color: Colors.black45,
+                        ),
+                        tooltip: 'Polls',
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.report,
+                          color: Colors.black,
+                        ),
+                        tooltip: 'Reports',
                       ),
                     ],
                   ),
                 ],
+              ),
+            ),
+          ),
+          // --- End HayyGov Header ---
+          // --- Switch between Inbox and Reports ---
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 18.0),
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragEnd: _onHorizontalDrag,
+              child: Container(
+                width: 240,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedAlign(
+                      alignment: showInbox ? Alignment.centerLeft : Alignment.centerRight,
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        width: 120,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFBDBDBD),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        // Inbox icon always on the left
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (!showInbox) {
+                                setState(() {
+                                  showInbox = true;
+                                });
+                                _navigateToInbox(context);
+                              }
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.inbox,
+                                color: showInbox ? Colors.white : Colors.black,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                        // Reports icon always on the right
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Already on Reports page, do nothing
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.description,
+                                color: showInbox ? Colors.black : Colors.white,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

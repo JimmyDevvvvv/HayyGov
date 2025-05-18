@@ -36,6 +36,29 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
     });
   }
 
+  void _navigateToEmergencyN(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const EmergencyN(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(-1.0, 0.0), // Slide from left
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe right to go to EmergencyN
+    if (details.primaryVelocity != null && details.primaryVelocity! > 200) {
+      _navigateToEmergencyN(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final unapprovedAdsRef = FirebaseFirestore.instance
@@ -44,125 +67,100 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
         .orderBy('timestamp', descending: true);
 
     final Color bgColor = const Color(0xFFF2E9E1);
-    final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Approve Advertisements"),
-        backgroundColor: bgColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
       backgroundColor: bgColor,
       body: Column(
         children: [
-          // --- HayyGov Header with navigation bar ---
-          Container(
-            margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
-            decoration: BoxDecoration(
-              color: navBrown,
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/header_bg.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF9C7B4B),
-                  BlendMode.srcATop,
-                ),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.13),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
+          const SizedBox(height: 30), // for status bar space
+          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/bg.png'),
+                  fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4),
+                    BlendMode.dstATop,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                  child: Column(
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text(
+                    'HayyGov',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 3,
+                    ),
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Center(
-                        child: Text(
-                          "HayyGov",
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black12,
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.campaign,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Announcements',
                       ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: navBrown,
-                          borderRadius: BorderRadius.circular(14),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const EmergencyN()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.phone,
+                          color: Colors.black45,
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Announcements
-                            IconButton(
-                              icon: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 32),
-                              tooltip: 'Announcements',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                                );
-                              },
-                            ),
-                            // Polls
-                            IconButton(
-                              icon: const Icon(Icons.poll, color: Colors.white, size: 32),
-                              tooltip: 'Polls',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const PollsSection()),
-                                );
-                              },
-                            ),
-                            // Emergency
-                            IconButton(
-                              icon: const Icon(Icons.call, color: Colors.red, size: 32),
-                              tooltip: 'Emergency',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const EmergencyN()),
-                                );
-                              },
-                            ),
-                            // Reports
-                            IconButton(
-                              icon: const Icon(Icons.description, color: Colors.white, size: 32),
-                              tooltip: 'Reports',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                                );
-                              },
-                            ),
-                          ],
+                        tooltip: 'Emergency',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const PollsSection()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.poll,
+                          color: Colors.black45,
                         ),
+                        tooltip: 'Polls',
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                          );
+                        },
+                        icon: const Icon(
+                          Icons.report,
+                          color: Colors.black45,
+                        ),
+                        tooltip: 'Reports',
                       ),
                     ],
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           // --- Switch between Ads and Emergency Numbers ---
@@ -198,10 +196,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                               setState(() {
                                 showAds = false;
                               });
-                              Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(builder: (_) => const EmergencyN()),
-                              );
+                              _navigateToEmergencyN(context);
                             }
                           },
                           child: Center(
@@ -216,12 +211,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                       Expanded(
                         child: GestureDetector(
                           onTap: () {
-                            if (!showAds) {
-                              setState(() {
-                                showAds = true;
-                              });
-                              // Already on Ads page, do nothing
-                            }
+                            // Already on Ads page, do nothing
                           },
                           child: Center(
                             child: Icon(
@@ -239,175 +229,178 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
             ),
           ),
           // --- End Switch ---
-          // --- End HayyGov Header ---
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: unapprovedAdsRef.snapshots(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onHorizontalDragEnd: _onHorizontalDrag,
+              child: StreamBuilder<QuerySnapshot>(
+                stream: unapprovedAdsRef.snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
 
-                final docs = snapshot.data!.docs;
-                if (docs.isEmpty) return const Center(child: Text("No ads awaiting approval."));
+                  final docs = snapshot.data!.docs;
+                  if (docs.isEmpty) return const Center(child: Text("No ads awaiting approval."));
 
-                return ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    final data = docs[index].data() as Map<String, dynamic>;
-                    final adId = docs[index].id;
-                    final title = data['title'];
-                    final desc = data['description'];
-                    final imageUrl = data['imageUrl'];
-                    final location = data['location'] ?? '';
-                    final advertiserId = data['advertiserId'];
+                  return ListView.builder(
+                    itemCount: docs.length,
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      final adId = docs[index].id;
+                      final title = data['title'];
+                      final desc = data['description'];
+                      final imageUrl = data['imageUrl'];
+                      final location = data['location'] ?? '';
+                      final advertiserId = data['advertiserId'];
 
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance.collection('users').doc(advertiserId).get(),
-                      builder: (context, userSnapshot) {
-                        String advertiserEmail = advertiserId;
-                        if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
-                          final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                          if (userData != null && userData.containsKey('email')) {
-                            advertiserEmail = userData['email'];
+                      return FutureBuilder<DocumentSnapshot>(
+                        future: FirebaseFirestore.instance.collection('users').doc(advertiserId).get(),
+                        builder: (context, userSnapshot) {
+                          String advertiserEmail = advertiserId;
+                          if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
+                            final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                            if (userData != null && userData.containsKey('email')) {
+                              advertiserEmail = userData['email'];
+                            }
                           }
-                        }
 
-                        final isApproved = approvedAdId == adId;
-                        final isRejected = rejectedAdId == adId;
+                          final isApproved = approvedAdId == adId;
+                          final isRejected = rejectedAdId == adId;
 
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(14),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // Top row: status icon, title, image
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    // Status icon
-                                    Padding(
-                                      padding: const EdgeInsets.only(top: 4.0, right: 4.0),
-                                      child: isApproved
-                                          ? const Icon(Icons.check_circle, color: Colors.green, size: 26)
-                                          : isRejected
-                                              ? const Icon(Icons.cancel, color: Colors.red, size: 26)
-                                              : const SizedBox(width: 26),
-                                    ),
-                                    const SizedBox(width: 2),
-                                    // Title and desc
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            title ?? '',
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 17,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 2),
-                                          Text(
-                                            desc ?? '',
-                                            maxLines: 2,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: const TextStyle(fontSize: 15),
-                                          ),
-                                          if (location.isNotEmpty)
-                                            Padding(
-                                              padding: const EdgeInsets.only(top: 4.0),
-                                              child: Row(
-                                                children: [
-                                                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                                                  const SizedBox(width: 4),
-                                                  Text(location, style: const TextStyle(color: Colors.grey)),
-                                                ],
+                          return Container(
+                            margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(18),
+                              border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(14),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Top row: status icon, title, image
+                                  Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // Status icon
+                                      Padding(
+                                        padding: const EdgeInsets.only(top: 4.0, right: 4.0),
+                                        child: isApproved
+                                            ? const Icon(Icons.check_circle, color: Colors.green, size: 26)
+                                            : isRejected
+                                                ? const Icon(Icons.cancel, color: Colors.red, size: 26)
+                                                : const SizedBox(width: 26),
+                                      ),
+                                      const SizedBox(width: 2),
+                                      // Title and desc
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              title ?? '',
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17,
                                               ),
                                             ),
-                                          Text(
-                                            'Advertiser: $advertiserEmail',
-                                            style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              desc ?? '',
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: const TextStyle(fontSize: 15),
+                                            ),
+                                            if (location.isNotEmpty)
+                                              Padding(
+                                                padding: const EdgeInsets.only(top: 4.0),
+                                                child: Row(
+                                                  children: [
+                                                    const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                                                    const SizedBox(width: 4),
+                                                    Text(location, style: const TextStyle(color: Colors.grey)),
+                                                  ],
+                                                ),
+                                              ),
+                                            Text(
+                                              'Advertiser: $advertiserEmail',
+                                              style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      // Image
+                                      if (imageUrl != null && imageUrl.isNotEmpty)
+                                        ClipRRect(
+                                          borderRadius: BorderRadius.circular(10),
+                                          child: Image.network(
+                                            imageUrl,
+                                            width: 80,
+                                            height: 80,
+                                            fit: BoxFit.cover,
+                                            errorBuilder: (context, error, stackTrace) =>
+                                                const SizedBox(width: 80, height: 80),
                                           ),
-                                        ],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    // Image
-                                    if (imageUrl != null && imageUrl.isNotEmpty)
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          imageUrl,
-                                          width: 80,
-                                          height: 80,
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) =>
-                                              const SizedBox(width: 80, height: 80),
+                                        ),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10),
+                                  // Approve/Reject buttons row
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      // Approve button
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isApproved ? Colors.black : Colors.transparent,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: isApproved ? Colors.green.withOpacity(0.12) : Colors.transparent,
+                                        ),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.thumb_up,
+                                            color: Colors.green, // Always green
+                                            size: 32,
+                                          ),
+                                          onPressed: () => _approveAd(adId),
                                         ),
                                       ),
-                                  ],
-                                ),
-                                const SizedBox(height: 10),
-                                // Approve/Reject buttons row
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    // Approve button
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: isApproved ? Colors.black : Colors.transparent,
-                                          width: 2,
+                                      const SizedBox(width: 18),
+                                      // Reject button
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                            color: isRejected ? Colors.black : Colors.transparent,
+                                            width: 2,
+                                          ),
+                                          borderRadius: BorderRadius.circular(16),
+                                          color: isRejected ? Colors.red.withOpacity(0.12) : Colors.transparent,
                                         ),
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: isApproved ? Colors.green.withOpacity(0.12) : Colors.transparent,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.thumb_up,
-                                          color: Colors.green, // Always green
-                                          size: 32,
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.thumb_down,
+                                            color: Colors.red, // Always red
+                                            size: 32,
+                                          ),
+                                          onPressed: () => _deleteAd(adId),
                                         ),
-                                        onPressed: () => _approveAd(adId),
                                       ),
-                                    ),
-                                    const SizedBox(width: 18),
-                                    // Reject button
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: isRejected ? Colors.black : Colors.transparent,
-                                          width: 2,
-                                        ),
-                                        borderRadius: BorderRadius.circular(16),
-                                        color: isRejected ? Colors.red.withOpacity(0.12) : Colors.transparent,
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.thumb_down,
-                                          color: Colors.red, // Always red
-                                          size: 32,
-                                        ),
-                                        onPressed: () => _deleteAd(adId),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ),
         ],

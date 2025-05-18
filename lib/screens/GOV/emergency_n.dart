@@ -99,231 +99,224 @@ class _EmergencyNState extends State<EmergencyN> {
     setState(() {});
   }
 
+  void _navigateToAdApproval(BuildContext context) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        transitionDuration: const Duration(milliseconds: 350),
+        pageBuilder: (_, __, ___) => const AdApprovalScreen(),
+        transitionsBuilder: (_, animation, __, child) {
+          final offsetAnimation = Tween<Offset>(
+            begin: const Offset(1.0, 0.0), // Slide from right
+            end: Offset.zero,
+          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
+          return SlideTransition(position: offsetAnimation, child: child);
+        },
+      ),
+    );
+  }
+
+  void _onHorizontalDrag(DragEndDetails details) {
+    // Swipe left to go to AdApprovalScreen
+    if (details.primaryVelocity != null && details.primaryVelocity! < -200) {
+      _navigateToAdApproval(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Emergency Numbers'),
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-        ),
-        backgroundColor: const Color(0xFFD6C4B0),
-        elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.black),
-      ),
-      backgroundColor: const Color(0xFFD6C4B0),
-      body: Column(
-        children: [
-          // --- HayyGov Header with navigation bar ---
-          Container(
-            margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
-            decoration: BoxDecoration(
-              color: navBrown,
-              borderRadius: BorderRadius.circular(20),
-              image: const DecorationImage(
-                image: AssetImage('assets/header_bg.jpg'),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Color(0xFF9C7B4B),
-                  BlendMode.srcATop,
-                ),
-              ),
-            ),
-            child: Stack(
-              children: [
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.13),
-                      borderRadius: BorderRadius.circular(20),
+      backgroundColor: const Color(0xFFF2E9E1),
+      body: GestureDetector(
+        onHorizontalDragEnd: _onHorizontalDrag,
+        child: Column(
+          children: [
+            const SizedBox(height: 30), // for status bar space
+            // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                    image: const AssetImage('assets/images/bg.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.4),
+                      BlendMode.dstATop,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
-                  child: Column(
-                    children: [
-                      Center(
-                        child: Text(
-                          "HayyGov",
-                          style: const TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            letterSpacing: 2,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black12,
-                                blurRadius: 2,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Container(
-                        decoration: BoxDecoration(
-                          color: navBrown,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // Announcements
-                            IconButton(
-                              icon: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 32),
-                              tooltip: 'Announcements',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                                );
-                              },
-                            ),
-                            // Polls
-                            IconButton(
-                              icon: const Icon(Icons.poll, color: Colors.white, size: 32),
-                              tooltip: 'Polls',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const PollsSection()),
-                                );
-                              },
-                            ),
-                            // Emergency (current)
-                            IconButton(
-                              icon: const Icon(Icons.call, color: Colors.red, size: 32),
-                              tooltip: 'Emergency',
-                              onPressed: () {},
-                            ),
-                            // Reports
-                            IconButton(
-                              icon: const Icon(Icons.description, color: Colors.white, size: 32),
-                              tooltip: 'Reports',
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // --- Switch between Emergency Numbers and Ads Approval ---
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: Container(
-              width: 240,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Stack(
-                children: [
-                  AnimatedAlign(
-                    alignment: showAds ? Alignment.centerRight : Alignment.centerLeft,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 120,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFBDBDBD),
-                        borderRadius: BorderRadius.circular(24),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'HayyGov',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        letterSpacing: 3,
                       ),
                     ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Do nothing, already on Emergency page
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.call,
-                              color: !showAds ? Colors.white : Colors.black,
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Navigate to AdApprovalScreen when pressing the right side
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        IconButton(
+                          onPressed: () {
                             Navigator.pushReplacement(
                               context,
-                              MaterialPageRoute(builder: (_) => const AdApprovalScreen()),
+                              MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
                             );
                           },
-                          child: Center(
-                            child: Icon(
-                              Icons.check_circle,
-                              color: !showAds ? Colors.green : Colors.white, // Green when not selected
-                              size: 28,
+                          icon: const Icon(
+                            Icons.campaign,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Announcements',
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(
+                            Icons.phone,
+                            color: Colors.black,
+                          ),
+                          tooltip: 'Emergency',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const PollsSection()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.poll,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Polls',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.report,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Reports',
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            // --- End HayyGov Header ---
+            // --- Switch between Emergency Numbers and Ads Approval ---
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 18.0),
+              child: Container(
+                width: 240,
+                height: 48,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Stack(
+                  children: [
+                    AnimatedAlign(
+                      alignment: showAds ? Alignment.centerRight : Alignment.centerLeft,
+                      duration: const Duration(milliseconds: 200),
+                      child: Container(
+                        width: 120,
+                        height: 48,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFBDBDBD),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              // Do nothing, already on Emergency page
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.call,
+                                color: !showAds ? Colors.white : Colors.black,
+                                size: 28,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _navigateToAdApproval(context);
+                            },
+                            child: Center(
+                              child: Icon(
+                                Icons.check_circle,
+                                color: !showAds ? Colors.green : Colors.white, // Green when not selected
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          // --- End Switch ---
-          Expanded(
-            child: RefreshIndicator(
-              onRefresh: _reloadContacts,
-              child: StreamBuilder<List<EmergencyContact>>(
-                stream: firestoreService.getContactsStream(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting &&
-                      _offlineContacts.isEmpty) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+            // --- End Switch ---
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: _reloadContacts,
+                child: StreamBuilder<List<EmergencyContact>>(
+                  stream: firestoreService.getContactsStream(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting &&
+                        _offlineContacts.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  final contacts = snapshot.data ?? _offlineContacts;
+                    final contacts = snapshot.data ?? _offlineContacts;
 
-                  if (contacts.isEmpty) {
-                    return const Center(child: Text('No contacts available.'));
-                  }
+                    if (contacts.isEmpty) {
+                      return const Center(child: Text('No contacts available.'));
+                    }
 
-                  return ListView.builder(
-                    itemCount: contacts.length,
-                    itemBuilder: (context, index) {
-                      final contact = contacts[index];
-                      return Dismissible(
-                        key: Key(contact.id),
-                        onDismissed: (direction) {
-                          _deleteEmergencyContact(contact);
-                        },
-                        background: Container(color: Colors.red),
-                        child: ContactCard(contact: contact),
-                      );
-                    },
-                  );
-                },
+                    return ListView.builder(
+                      itemCount: contacts.length,
+                      itemBuilder: (context, index) {
+                        final contact = contacts[index];
+                        return Dismissible(
+                          key: Key(contact.id),
+                          onDismissed: (direction) {
+                            _deleteEmergencyContact(contact);
+                          },
+                          background: Container(color: Colors.red),
+                          child: ContactCard(contact: contact),
+                        );
+                      },
+                    );
+                  },
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _addEmergencyContact,
