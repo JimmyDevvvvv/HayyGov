@@ -57,12 +57,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
     return Scaffold(
       backgroundColor: const Color(0xFFD6C4B0),
-      appBar: AppBar(
-        title: const Text("Chat with Gov"),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white,
-        centerTitle: false
-      ),
+      // appBar: AppBar(
+      //   title: const Text("Chat with Gov"),
+      //   backgroundColor: Colors.brown,
+      //   foregroundColor: Colors.white,
+      //   centerTitle: false
+      // ),
       body: Column(
         children: [
           // 🔽 Chat Messages
