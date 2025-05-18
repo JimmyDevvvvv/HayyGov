@@ -6,16 +6,27 @@ import 'create_announcement_screen.dart';
 class AnnouncementFeedScreen extends StatelessWidget {
   const AnnouncementFeedScreen({super.key});
 
-  String _formatDate(Timestamp? timestamp) {
+  String _formatDateTime(Timestamp? timestamp) {
     if (timestamp == null) return '';
     final date = timestamp.toDate();
-    return DateFormat('yyyy/MM/dd HH:mm').format(date);
+    return DateFormat('dd/MM/yyyy - h:mm a').format(date);
   }
 
   @override
   Widget build(BuildContext context) {
+    final Color cardColor = Colors.white;
+    final Color borderColor = const Color(0xFFD6CFC7);
+    final Color accentColor = const Color(0xFF22211F);
+    final Color bgColor = const Color(0xFFF2E9E1);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Announcements')),
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        title: const Text('Announcements'),
+        backgroundColor: bgColor,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.black),
+      ),
       body: Column(
         children: [
           Expanded(
@@ -46,49 +57,105 @@ class AnnouncementFeedScreen extends StatelessWidget {
                     final timeStart = data['Time'] as Timestamp?;
                     final timeEnd = data['EndTime'] as Timestamp?;
 
-                    final timeLabel = timeEnd != null
-                        ? "${_formatDate(timeStart)} → ${_formatDate(timeEnd)}"
-                        : _formatDate(timeStart);
+                    // Format date(s)
+                    final startLabel = _formatDateTime(timeStart);
+                    final endLabel = timeEnd != null ? _formatDateTime(timeEnd) : null;
 
-                    return Card(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
-                      elevation: 2,
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                      decoration: BoxDecoration(
+                        color: cardColor,
+                        borderRadius: BorderRadius.circular(18),
+                        border: Border.all(color: borderColor, width: 2),
+                      ),
                       child: Padding(
-                        padding: const EdgeInsets.all(12),
+                        padding: const EdgeInsets.all(18),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(title,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16)),
-                            const SizedBox(height: 6),
-                            if (location.isNotEmpty)
-                              Text("📍 $location",
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 14)),
-                            if (timeStart != null)
-                              Text("🕒 $timeLabel",
-                                  style: const TextStyle(
-                                      color: Colors.grey, fontSize: 14)),
-                            const SizedBox(height: 6),
-                            Text(info),
-                            const SizedBox(height: 8),
-                            if (picture.isNotEmpty &&
-                                Uri.tryParse(picture)?.hasAbsolutePath ==
-                                    true)
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(8),
-                                child: Image.network(
-                                  picture,
-                                  height: 180,
-                                  width: double.infinity,
-                                  fit: BoxFit.cover,
-                                  errorBuilder: (context, error, stackTrace) =>
-                                      const SizedBox(),
+                            // Header row with icon and title
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 28),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        title,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 2),
+                                      Text(
+                                        endLabel == null
+                                            ? "Date: $startLabel"
+                                            : "Start: $startLabel\nEnd: $endLabel",
+                                        style: TextStyle(
+                                          color: Colors.grey[700],
+                                          fontSize: 13,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            // Location row
+                            if (location.isNotEmpty)
+                              Row(
+                                children: [
+                                  const Icon(Icons.location_on, color: Colors.black54, size: 18),
+                                  const SizedBox(width: 4),
+                                  Text(
+                                    location,
+                                    style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                ],
                               ),
+                            if (location.isNotEmpty) const SizedBox(height: 12),
+                            // Image and info row
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (picture.isNotEmpty &&
+                                    Uri.tryParse(picture)?.hasAbsolutePath == true)
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(12),
+                                    child: Image.network(
+                                      picture,
+                                      height: 120,
+                                      width: 160,
+                                      fit: BoxFit.cover,
+                                      errorBuilder: (context, error, stackTrace) =>
+                                          const SizedBox(width: 160, height: 120),
+                                    ),
+                                  ),
+                                if (picture.isNotEmpty) const SizedBox(width: 16),
+                                Expanded(
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      border: Border.all(color: borderColor),
+                                      borderRadius: BorderRadius.circular(16),
+                                    ),
+                                    child: Text(
+                                      info,
+                                      style: const TextStyle(fontSize: 15),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
@@ -101,13 +168,14 @@ class AnnouncementFeedScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: bgColor, // Match the background color
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CreateAnnouncementScreen()),
           );
         },
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.black), // Use black icon for contrast
       ),
     );
   }
