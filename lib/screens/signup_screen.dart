@@ -158,20 +158,23 @@ class _SignupScreenState extends State<SignupScreen> {
               const SizedBox(height: 30),
 
               // Sign-up Button
-              ElevatedButton(
-                onPressed: _signUp,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: _signUp,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
                   ),
-                ),
-                child: const Column(
-                  children: [
-                    Text('Sign-up', style: TextStyle(color: Colors.white)),
-                    Text('التسجيل', style: TextStyle(color: Colors.white)),
-                  ],
+                  child: const Column(
+                    children: [
+                      Text('Sign-up', style: TextStyle(color: Colors.white)),
+                      Text('التسجيل', style: TextStyle(color: Colors.white)),
+                    ],
+                  ),
                 ),
               ),
 
