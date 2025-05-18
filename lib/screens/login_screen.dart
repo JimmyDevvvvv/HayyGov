@@ -142,44 +142,24 @@ class _LoginScreenState extends State<LoginScreen> {
               // Bottom buttons or loading spinner
               isLoading
                   ? const CircularProgressIndicator()
-                  : Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        // Sign-up button
-                        ElevatedButton(
-                          onPressed: widget.onSignUpTap,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          child: const Column(
-                            children: [
-                              Text('Sign-up', style: TextStyle(color: Colors.white)),
-                              Text('التسجيل', style: TextStyle(color: Colors.white)),
-                            ],
+                  : SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: login,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(50),
                           ),
                         ),
-                        // Login button
-                        ElevatedButton(
-                          onPressed: login,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          ),
-                          child: const Column(
-                            children: [
-                              Text('Login', style: TextStyle(color: Colors.white)),
-                              Text('الدخول', style: TextStyle(color: Colors.white)),
-                            ],
-                          ),
+                        child: const Column(
+                          children: [
+                            Text('Login', style: TextStyle(color: Colors.white)),
+                            Text('الدخول', style: TextStyle(color: Colors.white)),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
             ],
           ),

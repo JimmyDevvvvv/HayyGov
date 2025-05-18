@@ -64,6 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // Email field
               Container(
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -73,7 +74,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: emailController,
                   decoration: const InputDecoration(
                     hintText: '@',
-                    contentPadding: EdgeInsets.symmetric(horizontal: 16),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 16), // <-- Add vertical padding
                     border: InputBorder.none,
                   ),
                 ),
@@ -92,6 +93,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // Password field
               Container(
+                width: double.infinity,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
@@ -102,7 +104,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   obscureText: obscurePassword,
                   decoration: InputDecoration(
                     hintText: '🔑',
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16), // <-- Match padding
                     border: InputBorder.none,
                     suffixIcon: IconButton(
                       icon: Icon(
@@ -129,6 +131,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
               // Role Dropdown
               Container(
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 decoration: BoxDecoration(
                   color: Colors.white,
@@ -148,6 +151,8 @@ class _SignupScreenState extends State<SignupScreen> {
                       setState(() => selectedRole = value);
                     }
                   },
+                  // Add vertical padding for visual consistency
+                  dropdownColor: Colors.white,
                 ),
               ),
               const SizedBox(height: 30),

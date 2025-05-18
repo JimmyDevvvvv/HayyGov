@@ -67,10 +67,10 @@ class _AuthPageViewState extends State<AuthPageView> {
                       child: ElevatedButton(
                         onPressed: _currentPage == 0 ? null : goToLogin,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          disabledBackgroundColor: Colors.black.withOpacity(0.7),
-                          disabledForegroundColor: Colors.white70,
+                          backgroundColor: Colors.black.withOpacity(0.7),
+                          foregroundColor: Colors.white70,
+                          disabledBackgroundColor: Colors.black,
+                          disabledForegroundColor: Colors.white,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.horizontal(left: Radius.circular(32)),
                           ),
@@ -91,10 +91,10 @@ class _AuthPageViewState extends State<AuthPageView> {
                       child: ElevatedButton(
                         onPressed: _currentPage == 1 ? null : goToSignup,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
-                          foregroundColor: Colors.white,
-                          disabledBackgroundColor: Colors.black.withOpacity(0.7),
-                          disabledForegroundColor: Colors.white70,
+                          backgroundColor: Colors.black.withOpacity(0.7),
+                          foregroundColor: Colors.white70,
+                          disabledBackgroundColor: Colors.black,
+                          disabledForegroundColor: Colors.white,
                           shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.horizontal(right: Radius.circular(32)),
                           ),
