@@ -83,7 +83,11 @@ class MyAdsScreen extends StatelessWidget {
         .orderBy('timestamp', descending: true);
 
     return Scaffold(
-      appBar: AppBar(title: const Text("My Ads")),
+      backgroundColor: const Color(0xFFD6C4B0),
+      appBar: AppBar(title: const Text("My Ads")
+        , backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
+      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: adQuery.snapshots(),
         builder: (context, snapshot) {

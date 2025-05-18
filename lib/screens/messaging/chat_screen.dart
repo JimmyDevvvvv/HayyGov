@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import '../../models/message.dart';
 
 class ChatScreen extends StatefulWidget {
-  final String senderRole; // "citizen" or "advertiser"
+  final String senderRole;
 
   const ChatScreen({super.key, required this.senderRole});
 
@@ -33,19 +33,17 @@ class _ChatScreenState extends State<ChatScreen> {
     final chatRef = _firestore.collection("chats").doc(_uid);
 
     try {
-      // Store metadata
       await chatRef.set({
         'role': widget.senderRole,
         'lastMessage': text,
         'lastTimestamp': Timestamp.now(),
       });
 
-      // Add message to subcollection
       await chatRef.collection("messages").add(message.toMap());
 
       _controller.clear();
     } catch (e) {
-      // Handle error appropriately
+      // Handle error
     }
   }
 
@@ -58,16 +56,23 @@ class _ChatScreenState extends State<ChatScreen> {
         .orderBy("timestamp", descending: false);
 
     return Scaffold(
+      backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(
-        title: Text("Chat with Gov"),
+        title: const Text("Chat with Gov"),
+        backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
+        centerTitle: false
       ),
       body: Column(
         children: [
+          // 🔽 Chat Messages
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: messagesRef.snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
 
                 final docs = snapshot.data!.docs;
 
@@ -95,6 +100,8 @@ class _ChatScreenState extends State<ChatScreen> {
               },
             ),
           ),
+
+          // 🔽 Message Input
           Padding(
             padding: const EdgeInsets.all(10),
             child: Row(
@@ -115,7 +122,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );

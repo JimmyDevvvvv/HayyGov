@@ -25,7 +25,8 @@ class _CitizenAnnouncementsPollsScreenState
     return Scaffold(
       backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFD6C4B0),
+        backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
         elevation: 0,
         title: const Text('Citizen Announcements & Polls'),
       ),

@@ -64,8 +64,11 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFD6C4B0),
       appBar: AppBar(
         title: const Text("Submit a Report"),
+        backgroundColor: Colors.brown,
+        foregroundColor: Colors.white,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -79,6 +82,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: "e.g. Water pipes are broken near 5th Street...",
+                filled: true,
+                fillColor: Colors.white,
               ),
             ),
             const SizedBox(height: 10),
@@ -88,6 +93,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                 border: OutlineInputBorder(),
                 labelText: "Image URL (optional)",
                 hintText: "Paste a link to an image",
+                filled: true,
+                fillColor: Colors.white,
               ),
             ),
             const SizedBox(height: 10),
@@ -97,6 +104,8 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
                 border: OutlineInputBorder(),
                 labelText: "Location (optional)",
                 hintText: "e.g. 5th Street, near the park",
+                filled: true,
+                fillColor: Colors.white,
               ),
             ),
             const SizedBox(height: 20),
