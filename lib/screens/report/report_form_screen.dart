@@ -65,11 +65,6 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFD6C4B0),
-      appBar: AppBar(
-        title: const Text("Submit a Report"),
-        backgroundColor: Colors.brown,
-        foregroundColor: Colors.white,
-      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -80,7 +75,16 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
               controller: _reportController,
               maxLines: 6,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  borderSide: BorderSide(color: Colors.brown),
+                ),
                 hintText: "e.g. Water pipes are broken near 5th Street...",
                 filled: true,
                 fillColor: Colors.white,
@@ -90,7 +94,16 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
             TextField(
               controller: _imageUrlController,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  borderSide: BorderSide(color: Colors.brown),
+                ),
                 labelText: "Image URL (optional)",
                 hintText: "Paste a link to an image",
                 filled: true,
@@ -101,7 +114,16 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
             TextField(
               controller: _locationController,
               decoration: const InputDecoration(
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  borderSide: BorderSide(color: Colors.brown),
+                ),
                 labelText: "Location (optional)",
                 hintText: "e.g. 5th Street, near the park",
                 filled: true,
@@ -111,6 +133,13 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
             const SizedBox(height: 20),
             ElevatedButton.icon(
               onPressed: _isSubmitting ? null : _submitReport,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.black,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              ),
               icon: const Icon(Icons.report),
               label: _isSubmitting
                   ? const Text("Submitting...")
