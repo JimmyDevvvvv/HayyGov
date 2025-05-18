@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'announcement_feed_screen.dart';
+import 'polls_section.dart';
+import 'emergency_n.dart';
+import '../report/report_list_screen.dart';
 
 class CreatePollScreen extends StatefulWidget {
   const CreatePollScreen({super.key});
@@ -62,96 +66,195 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF4F0ED),
-      appBar: AppBar(title: const Text("Create Poll")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Poll Title
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter title... | ...أدخل العنوان',
-                    border: InputBorder.none,
-                  ),
-                  validator: (val) => val!.isEmpty ? 'Required' : null,
-                ),
-              ),
-              const SizedBox(height: 20),
+    final Color bgColor = const Color(0xFFF4F0ED);
 
-              // Poll Options
-              Column(
-                children: List.generate(_optionControllers.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
+    return Scaffold(
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(0),
+          children: [
+            // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/bg.png'),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black54,
+                      BlendMode.dstATop,
+                    ),
+                  ),
+                ),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'HayyGov',
+                      style: TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        letterSpacing: 3,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _optionControllers[index],
-                            decoration: InputDecoration(
-                              hintText: index == 0 ? 'Yes | نعم' : index == 1 ? 'No | لا' : 'Option ${index + 1}',
-                              filled: true,
-                              fillColor: const Color(0xFFEEDFD3),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (val) => val!.isEmpty ? 'Required' : null,
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.campaign,
+                            color: Colors.black45,
                           ),
+                          tooltip: 'Announcements',
                         ),
-                        if (_optionControllers.length > 2)
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () => _removeOption(index),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const EmergencyN()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.phone,
+                            color: Colors.black45,
                           ),
+                          tooltip: 'Emergency',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const PollsSection()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.poll,
+                            color: Colors.black,
+                          ),
+                          tooltip: 'Polls',
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                            );
+                          },
+                          icon: const Icon(
+                            Icons.report,
+                            color: Colors.black45,
+                          ),
+                          tooltip: 'Reports',
+                        ),
                       ],
                     ),
-                  );
-                }),
+                  ],
+                ),
               ),
-
-              // ➕ Add Option Button
-              const SizedBox(height: 10),
-              if (_optionControllers.length < 5)
-                GestureDetector(
-                  onTap: _addOption,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEDFD3),
-                      borderRadius: BorderRadius.circular(10),
+            ),
+            // --- End HayyGov Header ---
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Poll Title
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: TextFormField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter title... | ...أدخل العنوان',
+                          border: InputBorder.none,
+                        ),
+                        validator: (val) => val!.isEmpty ? 'Required' : null,
+                      ),
                     ),
-                    child: const Icon(Icons.add, size: 28),
-                  ),
-                ),
+                    const SizedBox(height: 20),
 
-              const Spacer(),
+                    // Poll Options
+                    Column(
+                      children: List.generate(_optionControllers.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _optionControllers[index],
+                                  decoration: InputDecoration(
+                                    hintText: index == 0 ? 'Yes | نعم' : index == 1 ? 'No | لا' : 'Option ${index + 1}',
+                                    filled: true,
+                                    fillColor: const Color(0xFFEEDFD3),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  validator: (val) => val!.isEmpty ? 'Required' : null,
+                                ),
+                              ),
+                              if (_optionControllers.length > 2)
+                                IconButton(
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                  onPressed: () => _removeOption(index),
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
+                    ),
 
-              // Submit Button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                ),
-                onPressed: _submit,
-                child: const Text(
-                  'Submit | تقديم',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                    // ➕ Add Option Button
+                    const SizedBox(height: 10),
+                    if (_optionControllers.length < 5)
+                      GestureDetector(
+                        onTap: _addOption,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEEDFD3),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.add, size: 28),
+                        ),
+                      ),
+
+                    const SizedBox(height: 30),
+
+                    // Submit Button
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                      ),
+                      onPressed: _submit,
+                      child: const Text(
+                        'Submit | تقديم',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
