@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-import './signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final VoidCallback onSignUpTap;
+  const LoginScreen({super.key, required this.onSignUpTap});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -51,13 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
         });
       }
     }
-  }
-
-  void navigateToSignUp() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const SignupScreen()),
-    );
   }
 
   @override
@@ -166,7 +159,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           children: [
                             // Sign-up button
                             ElevatedButton(
-                              onPressed: navigateToSignUp,
+                              onPressed: widget.onSignUpTap,
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.black,
                                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),

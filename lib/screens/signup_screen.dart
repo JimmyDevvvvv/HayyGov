@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+  final VoidCallback onLoginTap;
+  const SignupScreen({super.key, required this.onLoginTap});
 
   @override
   State<SignupScreen> createState() => _SignupScreenState();
@@ -26,7 +27,7 @@ class _SignupScreenState extends State<SignupScreen> {
     if (result != "success") {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result)));
     } else {
-      Navigator.pop(context); // Go back to login screen
+      widget.onLoginTap(); // switch page instead of pop
     }
   }
 
@@ -180,6 +181,40 @@ class _SignupScreenState extends State<SignupScreen> {
                       ],
                     ),
                   ),
+
+                  const SizedBox(height: 20),
+
+const SizedBox(height: 20),
+
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    const Text(
+      "Already have an account? ",
+      style: TextStyle(
+        color: Colors.black87,
+        fontSize: 14,
+      ),
+    ),
+    TextButton(
+      onPressed: widget.onLoginTap,
+      style: TextButton.styleFrom(
+        padding: EdgeInsets.zero,
+        minimumSize: const Size(50, 30),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        alignment: Alignment.centerLeft,
+      ),
+      child: const Text(
+        "Login",
+        style: TextStyle(
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+          decoration: TextDecoration.underline,
+        ),
+      ),
+    ),
+  ],
+),
                 ],
               ),
             ),
