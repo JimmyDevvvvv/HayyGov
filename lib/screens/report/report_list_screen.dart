@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:latlong2/latlong.dart';
 import '../GOV/announcement_feed_screen.dart';
 import '../GOV/polls_section.dart';
 import '../GOV/emergency_n.dart';
@@ -13,7 +15,7 @@ class ReportListScreen extends StatefulWidget {
 }
 
 class _ReportListScreenState extends State<ReportListScreen> {
-  bool showInbox = false; // For the switch, false means we're on reports
+  bool showInbox = false;
 
   void _navigateToInbox(BuildContext context) {
     Navigator.of(context).pushReplacement(
@@ -22,7 +24,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
         pageBuilder: (_, __, ___) => const AdminInboxScreen(),
         transitionsBuilder: (_, animation, __, child) {
           final offsetAnimation = Tween<Offset>(
-            begin: const Offset(-1.0, 0.0), // Slide from left
+            begin: const Offset(-1.0, 0.0),
             end: Offset.zero,
           ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
           return SlideTransition(position: offsetAnimation, child: child);
@@ -32,7 +34,6 @@ class _ReportListScreenState extends State<ReportListScreen> {
   }
 
   void _onHorizontalDrag(DragEndDetails details) {
-    // Swipe right to go to Inbox
     if (details.primaryVelocity != null && details.primaryVelocity! > 50) {
       _navigateToInbox(context);
     }
@@ -50,8 +51,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
       backgroundColor: bgColor,
       body: Column(
         children: [
-          const SizedBox(height: 30), // for status bar space
-          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
+          const SizedBox(height: 30),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
             child: Container(
@@ -84,50 +84,32 @@ class _ReportListScreenState extends State<ReportListScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.campaign,
-                          color: Colors.black45,
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
                         ),
+                        icon: const Icon(Icons.campaign, color: Colors.black45),
                         tooltip: 'Announcements',
                       ),
                       IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const EmergencyN()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.phone,
-                          color: Colors.black45,
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const EmergencyN()),
                         ),
+                        icon: const Icon(Icons.phone, color: Colors.black45),
                         tooltip: 'Emergency',
                       ),
                       IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const PollsSection()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.poll,
-                          color: Colors.black45,
+                        onPressed: () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (_) => const PollsSection()),
                         ),
+                        icon: const Icon(Icons.poll, color: Colors.black45),
                         tooltip: 'Polls',
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: const Icon(
-                          Icons.report,
-                          color: Colors.black,
-                        ),
+                        icon: const Icon(Icons.report, color: Colors.black),
                         tooltip: 'Reports',
                       ),
                     ],
@@ -136,8 +118,6 @@ class _ReportListScreenState extends State<ReportListScreen> {
               ),
             ),
           ),
-          // --- End HayyGov Header ---
-          // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
             child: GestureDetector(
@@ -166,14 +146,11 @@ class _ReportListScreenState extends State<ReportListScreen> {
                     ),
                     Row(
                       children: [
-                        // Inbox icon always on the left
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
                               if (!showInbox) {
-                                setState(() {
-                                  showInbox = true;
-                                });
+                                setState(() => showInbox = true);
                                 _navigateToInbox(context);
                               }
                             },
@@ -186,12 +163,9 @@ class _ReportListScreenState extends State<ReportListScreen> {
                             ),
                           ),
                         ),
-                        // Reports icon always on the right
                         Expanded(
                           child: GestureDetector(
-                            onTap: () {
-                              // Already on Reports page, do nothing
-                            },
+                            onTap: () {},
                             child: Center(
                               child: Icon(
                                 Icons.description,
@@ -208,7 +182,6 @@ class _ReportListScreenState extends State<ReportListScreen> {
               ),
             ),
           ),
-          // --- End Switch ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: reportsRef.snapshots(),
@@ -222,11 +195,12 @@ class _ReportListScreenState extends State<ReportListScreen> {
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
                     final data = docs[index].data() as Map<String, dynamic>;
-                    final userId = data['userId'];
-                    final content = data['content'];
+                    final userId = data['userId'] ?? 'Unknown';
+                   final content = data['description'] ?? 'No content provided';
+
                     final timestamp = (data['timestamp'] as Timestamp).toDate();
                     final imageUrl = data['imageUrl'] ?? '';
-                    final location = data['location'] ?? '';
+                    final location = data['location'] ?? {}; // map or {}
 
                     return FutureBuilder<DocumentSnapshot>(
                       future: FirebaseFirestore.instance.collection('users').doc(userId).get(),
@@ -251,7 +225,6 @@ class _ReportListScreenState extends State<ReportListScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                // Header row with title only (removed ! icon)
                                 Row(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
@@ -282,40 +255,62 @@ class _ReportListScreenState extends State<ReportListScreen> {
                                   ],
                                 ),
                                 const SizedBox(height: 16),
-                                // Location row
-                                if (location.isNotEmpty)
-                                  Row(
-                                    children: [
-                                      const Icon(Icons.location_on, color: Colors.black54, size: 18),
-                                      const SizedBox(width: 4),
-                                      Text(
-                                        location,
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15,
+
+                                if (location is Map &&
+                                    location['lat'] != null &&
+                                    location['lng'] != null) ...[
+                                  SizedBox(
+                                    height: 180,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: FlutterMap(
+                                        options: MapOptions(
+                                          initialCenter: LatLng(location['lat'], location['lng']),
+                                          initialZoom: 15,
+                                          interactionOptions: const InteractionOptions(
+  flags: InteractiveFlag.none,
+),
+
                                         ),
+                                        children: [
+                                          TileLayer(
+                                            urlTemplate:
+                                                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                            userAgentPackageName: 'com.example.hayygov',
+                                          ),
+                                          MarkerLayer(
+                                            markers: [
+                                              Marker(
+                                                width: 40,
+                                                height: 40,
+                                                point: LatLng(location['lat'], location['lng']),
+                                                child: const Icon(Icons.location_pin,
+                                                    color: Colors.red, size: 40),
+                                              )
+                                            ],
+                                          ),
+                                        ],
                                       ),
-                                    ],
+                                    ),
                                   ),
-                                if (location.isNotEmpty) const SizedBox(height: 12),
-                                // Image and info row
-                                if (imageUrl.isNotEmpty) ...[
+                                  const SizedBox(height: 12),
+                                ],
+
+                                if (imageUrl.isNotEmpty)
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(12),
                                     child: AspectRatio(
                                       aspectRatio: 4 / 3,
                                       child: Image.network(
                                         imageUrl,
-                                        fit: BoxFit.contain, // Show the whole image
+                                        fit: BoxFit.contain,
                                         errorBuilder: (context, error, stackTrace) =>
                                             const SizedBox(),
                                       ),
                                     ),
                                   ),
-                                  const SizedBox(height: 16),
-                                ],
+                                const SizedBox(height: 16),
                                 Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Expanded(
                                       child: Container(
