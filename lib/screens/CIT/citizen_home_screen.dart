@@ -32,7 +32,7 @@ class _CitizenHomeScreenState extends State<CitizenHomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       body: Column(
         children: [
           const SizedBox(height: 30), // for status bar space

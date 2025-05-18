@@ -64,7 +64,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -135,6 +135,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
               onPressed: _isSubmitting ? null : _submitReport,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
+                foregroundColor: Colors.white, // Ensures text and icon are white
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
