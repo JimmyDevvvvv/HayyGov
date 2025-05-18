@@ -1,3 +1,4 @@
+import 'package:continuehayygov/screens/auth_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -40,7 +41,7 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(primarySwatch: Colors.red),
         debugShowCheckedModeBanner: false,
         routes: {
-          '/': (context) => const LoginScreen(),
+          '/': (context) => const AuthPageView(),
           '/citizenHome': (context) => const CitizenHomeScreen(),
           '/govHome': (context) => const GovernmentMainScreen(),
           '/advertiserDashboard': (context) => const AdvertiserDashboardScreen(),
