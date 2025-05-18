@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'create_announcement_screen.dart';
+import 'polls_section.dart';
+import 'emergency_n.dart';
+import '../report/report_list_screen.dart';
 
 class AnnouncementFeedScreen extends StatelessWidget {
   const AnnouncementFeedScreen({super.key});
@@ -18,6 +21,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
     final Color borderColor = const Color(0xFFD6CFC7);
     final Color accentColor = const Color(0xFF22211F);
     final Color bgColor = const Color(0xFFF2E9E1);
+    final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -29,6 +33,111 @@ class AnnouncementFeedScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
+          // --- HayyGov Header with navigation bar ---
+          Container(
+            margin: const EdgeInsets.fromLTRB(12, 18, 12, 0),
+            decoration: BoxDecoration(
+              color: navBrown,
+              borderRadius: BorderRadius.circular(20),
+              image: const DecorationImage(
+                image: AssetImage('assets/header_bg.jpg'),
+                fit: BoxFit.cover,
+                colorFilter: ColorFilter.mode(
+                  Color(0xFF9C7B4B),
+                  BlendMode.srcATop,
+                ),
+              ),
+            ),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.13),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 8),
+                  child: Column(
+                    children: [
+                      Center(
+                        child: Text(
+                          "HayyGov",
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            letterSpacing: 2,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black12,
+                                blurRadius: 2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: navBrown,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            // Announcements (current)
+                            IconButton(
+                              icon: const Icon(Icons.warning_amber_rounded, color: Colors.amber, size: 32),
+                              tooltip: 'Announcements',
+                              onPressed: () {},
+                            ),
+                            // Polls
+                            IconButton(
+                              icon: const Icon(Icons.poll, color: Colors.white, size: 32),
+                              tooltip: 'Polls',
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const PollsSection()),
+                                );
+                              },
+                            ),
+                            // Emergency
+                            IconButton(
+                              icon: const Icon(Icons.call, color: Colors.red, size: 32),
+                              tooltip: 'Emergency',
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const EmergencyN()),
+                                );
+                              },
+                            ),
+                            // Reports
+                            IconButton(
+                              icon: const Icon(Icons.description, color: Colors.white, size: 32),
+                              tooltip: 'Reports',
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const ReportListScreen()),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // --- End HayyGov Header ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
