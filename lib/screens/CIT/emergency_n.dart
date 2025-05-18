@@ -38,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       // appBar: AppBar(
       //   title: const Text('Emergency Numbers'),
       //   backgroundColor: Colors.brown,

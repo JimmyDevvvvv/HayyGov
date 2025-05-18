@@ -83,7 +83,7 @@ class MyAdsScreen extends StatelessWidget {
         .orderBy('timestamp', descending: true);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       appBar: AppBar(title: const Text("My Ads")
         , backgroundColor: Colors.brown,
         foregroundColor: Colors.white,

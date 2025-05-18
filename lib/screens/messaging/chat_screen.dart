@@ -56,7 +56,7 @@ class _ChatScreenState extends State<ChatScreen> {
         .orderBy("timestamp", descending: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       // appBar: AppBar(
       //   title: const Text("Chat with Gov"),
       //   backgroundColor: Colors.brown,
@@ -89,7 +89,7 @@ class _ChatScreenState extends State<ChatScreen> {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: isMe ? Colors.blue[200] : Colors.grey[300],
+                          color: isMe ? const Color.fromARGB(255, 184, 149, 110) : const Color.fromARGB(255, 255, 255, 255),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(msg.text),
@@ -103,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // 🔽 Message Input
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 24),
             child: Row(
               children: [
                 Expanded(
@@ -111,14 +111,30 @@ class _ChatScreenState extends State<ChatScreen> {
                     controller: _controller,
                     decoration: const InputDecoration(
                       hintText: 'Enter your message...',
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.brown),
+                      ),
+                      filled: true,
+                      fillColor: Color(0xFFF7F3EF),
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: sendMessage,
-                  child: const Text("Send"),
+                  child: const Icon(Icons.send, color: Colors.black, size: 24),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(15),
+                  ),
                 )
               ],
             ),

@@ -112,11 +112,11 @@ class _EmergencyNState extends State<EmergencyN> {
             Navigator.pop(context);
           },
         ),
-        backgroundColor: const Color(0xFFD6C4B0),
+        backgroundColor: const Color(0xFFE5E0DB),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.black),
       ),
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       body: Column(
         children: [
           // --- HayyGov Header with navigation bar ---

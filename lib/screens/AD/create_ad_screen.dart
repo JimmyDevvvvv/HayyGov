@@ -64,7 +64,7 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFD6C4B0),
+      backgroundColor: const Color(0xFFE5E0DB),
       appBar: AppBar(title: const Text("Create Advertisement"),
               backgroundColor: Colors.brown,
         foregroundColor: Colors.white,
