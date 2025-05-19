@@ -96,26 +96,20 @@ class _EmergencyNState extends State<EmergencyN> {
     setState(() {});
   }
 
-  void _navigateToAdApproval(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 350),
-        pageBuilder: (_, __, ___) => const AdApprovalScreen(),
-        transitionsBuilder: (_, animation, __, child) {
-          final offsetAnimation = Tween<Offset>(
-            begin: const Offset(1.0, 0.0), // Slide from right
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
-      ),
-    );
+  void _toggleView(bool ads) {
+    setState(() {
+      showAds = ads;
+    });
   }
 
   void _onHorizontalDrag(DragEndDetails details) {
-    // Swipe left to go to AdApprovalScreen
-    if (details.primaryVelocity != null && details.primaryVelocity! < -200) {
-      _navigateToAdApproval(context);
+    // Swipe left to go to AdApproval, right to go to Emergency Numbers
+    if (details.primaryVelocity != null) {
+      if (details.primaryVelocity! < -50) {
+        _toggleView(true);
+      } else if (details.primaryVelocity! > 50) {
+        _toggleView(false);
+      }
     }
   }
 
@@ -162,7 +156,7 @@ class _EmergencyNState extends State<EmergencyN> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      // Do nothing, already on Emergency page
+                                      _toggleView(false);
                                     },
                                     child: Center(
                                       child: Icon(
@@ -176,12 +170,12 @@ class _EmergencyNState extends State<EmergencyN> {
                                 Expanded(
                                   child: GestureDetector(
                                     onTap: () {
-                                      _navigateToAdApproval(context);
+                                      _toggleView(true);
                                     },
                                     child: Center(
                                       child: Icon(
                                         Icons.check_circle,
-                                        color: !showAds ? Colors.green : Colors.white, // Green when not selected
+                                        color: showAds ? Colors.white : Colors.green,
                                         size: 28,
                                       ),
                                     ),
@@ -195,39 +189,41 @@ class _EmergencyNState extends State<EmergencyN> {
                     ),
                     // --- End Switch ---
                     Expanded(
-                      child: RefreshIndicator(
-                        onRefresh: _reloadContacts,
-                        child: StreamBuilder<List<EmergencyContact>>(
-                          stream: firestoreService.getContactsStream(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState == ConnectionState.waiting &&
-                                _offlineContacts.isEmpty) {
-                              return const Center(child: CircularProgressIndicator());
-                            }
+                      child: showAds
+                          ? const AdApprovalScreen()
+                          : RefreshIndicator(
+                              onRefresh: _reloadContacts,
+                              child: StreamBuilder<List<EmergencyContact>>(
+                                stream: firestoreService.getContactsStream(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState == ConnectionState.waiting &&
+                                      _offlineContacts.isEmpty) {
+                                    return const Center(child: CircularProgressIndicator());
+                                  }
 
-                            final contacts = snapshot.data ?? _offlineContacts;
+                                  final contacts = snapshot.data ?? _offlineContacts;
 
-                            if (contacts.isEmpty) {
-                              return const Center(child: Text('No contacts available.'));
-                            }
+                                  if (contacts.isEmpty) {
+                                    return const Center(child: Text('No contacts available.'));
+                                  }
 
-                            return ListView.builder(
-                              itemCount: contacts.length,
-                              itemBuilder: (context, index) {
-                                final contact = contacts[index];
-                                return Dismissible(
-                                  key: Key(contact.id),
-                                  onDismissed: (direction) {
-                                    _deleteEmergencyContact(contact);
-                                  },
-                                  background: Container(color: Colors.red),
-                                  child: ContactCard(contact: contact),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      ),
+                                  return ListView.builder(
+                                    itemCount: contacts.length,
+                                    itemBuilder: (context, index) {
+                                      final contact = contacts[index];
+                                      return Dismissible(
+                                        key: Key(contact.id),
+                                        onDismissed: (direction) {
+                                          _deleteEmergencyContact(contact);
+                                        },
+                                        background: Container(color: Colors.red),
+                                        child: ContactCard(contact: contact),
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
                     ),
                   ],
                 ),
