@@ -66,8 +66,8 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
     return Scaffold(
       backgroundColor: const Color(0xFFE5E0DB),
       appBar: AppBar(title: const Text("Create Advertisement"),
-              backgroundColor: Colors.brown,
-        foregroundColor: Colors.white,
+        backgroundColor: const Color(0xFFE5E0DB),
+        foregroundColor: Colors.black,
 ),
       body: Padding(
         padding: const EdgeInsets.all(16),

@@ -84,9 +84,9 @@ class MyAdsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFE5E0DB),
-      appBar: AppBar(title: const Text("My Ads")
-        , backgroundColor: Colors.brown,
-        foregroundColor: Colors.white,
+      appBar: AppBar(title: const Text("My Ads"),
+        backgroundColor: const Color(0xFFE5E0DB),
+        foregroundColor: Colors.black,
       ),
       body: StreamBuilder<QuerySnapshot>(
         stream: adQuery.snapshots(),
@@ -148,8 +148,24 @@ class MyAdsScreen extends StatelessWidget {
                       trailing: Text(status, style: TextStyle(color: statusColor)),
                     ),
                     if (imageUrl != null && imageUrl.isNotEmpty)
-                      Image.network(imageUrl, height: 200, fit: BoxFit.cover),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                imageUrl,
+                                height: 200,
+                                fit: BoxFit.contain, // No stretching, keep original aspect ratio
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     OverflowBar(
+                      alignment: MainAxisAlignment.center,
                       children: [
                         TextButton.icon(
                           onPressed: () => _editAd(context, doc.id, ad),
