@@ -66,7 +66,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
         .where('approved', isEqualTo: false)
         .orderBy('timestamp', descending: true);
 
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -348,7 +348,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                                   const SizedBox(height: 10),
                                   // Approve/Reject buttons row
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
                                     children: [
                                       // Approve button
                                       Container(

@@ -32,18 +32,6 @@ class _GovernmentMainScreenState extends State<GovernmentMainScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('HayyGov')),
       body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _navigateTo,
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Main'),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Inbox'),
-          BottomNavigationBarItem(icon: Icon(Icons.report_problem), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.verified), label: 'Approve Ads'),
-        ],
-      ),
     );
   }
 }

@@ -47,7 +47,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
         .orderBy('lastTimestamp', descending: true)
         .snapshots();
 
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,

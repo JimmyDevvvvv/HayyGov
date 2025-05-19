@@ -45,7 +45,7 @@ class _ReportListScreenState extends State<ReportListScreen> {
         .collection('reports')
         .orderBy('timestamp', descending: true);
 
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,

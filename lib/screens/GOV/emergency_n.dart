@@ -127,7 +127,7 @@ class _EmergencyNState extends State<EmergencyN> {
     final Color navBrown = const Color(0xFF9C7B4B);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF2E9E1),
+      backgroundColor: const Color(0xFFE5E0DB),
       body: GestureDetector(
         onHorizontalDragEnd: _onHorizontalDrag,
         child: Column(
@@ -319,8 +319,9 @@ class _EmergencyNState extends State<EmergencyN> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xFF2c2c2c), // Match the background color
         onPressed: _addEmergencyContact,
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: Colors.white), // Use black icon for contrast
       ),
     );
   }

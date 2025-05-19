@@ -61,7 +61,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         .collection("messages")
         .orderBy("timestamp", descending: false);
 
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -193,45 +193,42 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 18),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
-                borderRadius: BorderRadius.circular(18),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _controller,
-                      minLines: 1,
-                      maxLines: 4,
-                      decoration: const InputDecoration(
-                        hintText: 'Type a reply...',
-                        border: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.symmetric(vertical: 10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your message...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
                       ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.brown),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF9C7B4B),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.send, color: Colors.white),
-                      onPressed: sendReply,
-                      tooltip: "Send",
-                    ),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton(
+                  onPressed: sendReply,
+                  child: const Icon(Icons.send, color: Colors.black, size: 24),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(15),
                   ),
-                ],
-              ),
+                )
+              ],
             ),
-          )
+          ),
         ],
       ),
     );

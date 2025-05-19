@@ -106,7 +106,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
     final Color cardColor = Colors.white;
     final Color borderColor = const Color(0xFFD6CFC7);
     final Color accentColor = const Color(0xFF22211F);

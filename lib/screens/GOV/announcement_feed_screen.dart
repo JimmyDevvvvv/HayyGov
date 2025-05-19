@@ -20,7 +20,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
     final Color cardColor = Colors.white;
     final Color borderColor = const Color(0xFFD6CFC7);
     final Color accentColor = const Color(0xFF22211F);
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,
@@ -252,14 +252,14 @@ class AnnouncementFeedScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: bgColor, // Match the background color
+        backgroundColor: Color(0xFF2c2c2c), // Match the background color
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CreateAnnouncementScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black), // Use black icon for contrast
+        child: const Icon(Icons.add, color: Colors.white), // Use black icon for contrast
       ),
     );
   }

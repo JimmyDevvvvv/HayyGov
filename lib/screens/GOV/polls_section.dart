@@ -10,7 +10,7 @@ class PollsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
     final Color cardColor = Colors.white;
     final Color borderColor = const Color(0xFFD6CFC7);
     final Color submitBg = const Color(0xFF22211F);
@@ -209,7 +209,7 @@ class PollsSection extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: submitBg,
+        backgroundColor: Color(0xFF2c2c2c),
         onPressed: () {
           Navigator.push(
             context,
