@@ -48,6 +48,7 @@ class AdFeedScreen extends StatelessWidget {
                   }
 
                   return Card(
+                    color: Colors.white,
                     margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

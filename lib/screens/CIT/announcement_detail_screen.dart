@@ -33,6 +33,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(a.title)),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -107,7 +108,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: Colors.grey[100],
+            color: Colors.white,
             child: Row(
               children: [
                 Expanded(
