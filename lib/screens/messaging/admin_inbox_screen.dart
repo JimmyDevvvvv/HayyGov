@@ -17,26 +17,20 @@ class AdminInboxScreen extends StatefulWidget {
 class _AdminInboxScreenState extends State<AdminInboxScreen> {
   bool showInbox = true; // For the switch
 
-  void _navigateToReports(BuildContext context) {
-    Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        transitionDuration: const Duration(milliseconds: 350),
-        pageBuilder: (_, __, ___) => const ReportListScreen(),
-        transitionsBuilder: (_, animation, __, child) {
-          final offsetAnimation = Tween<Offset>(
-            begin: const Offset(1.0, 0.0), // Slide from right
-            end: Offset.zero,
-          ).animate(CurvedAnimation(parent: animation, curve: Curves.easeOut));
-          return SlideTransition(position: offsetAnimation, child: child);
-        },
-      ),
-    );
+  void _toggleView(bool inbox) {
+    setState(() {
+      showInbox = inbox;
+    });
   }
 
   void _onHorizontalDrag(DragEndDetails details) {
-    // Swipe left to go to Reports
-    if (details.primaryVelocity != null && details.primaryVelocity! < -50) {
-      _navigateToReports(context);
+    // Swipe left to go to Reports, right to go to Inbox
+    if (details.primaryVelocity != null) {
+      if (details.primaryVelocity! < -50) {
+        _toggleView(false);
+      } else if (details.primaryVelocity! > 50) {
+        _toggleView(true);
+      }
     }
   }
 
@@ -46,105 +40,12 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
         .collection('chats')
         .orderBy('lastTimestamp', descending: true)
         .snapshots();
-
     final Color bgColor = const Color(0xFFE5E0DB);
-
     return Scaffold(
       backgroundColor: bgColor,
       body: Column(
         children: [
           const SizedBox(height: 30), // for status bar space
-          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/bg.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.4),
-                    BlendMode.dstATop,
-                  ),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'HayyGov',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.campaign,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Announcements',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const EmergencyN()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.phone,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Emergency',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const PollsSection()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.poll,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Polls',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.report,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Reports',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // --- End HayyGov Header ---
           // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -178,7 +79,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              // Already on Inbox page, do nothing
+                              _toggleView(true);
                             },
                             child: Center(
                               child: Icon(
@@ -193,7 +94,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                         Expanded(
                           child: GestureDetector(
                             onTap: () {
-                              _navigateToReports(context);
+                              _toggleView(false);
                             },
                             child: Center(
                               child: Icon(
@@ -214,89 +115,86 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
           // --- End Switch ---
           const SizedBox(height: 10),
           Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: chatStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
-
-                final docs = snapshot.data!.docs;
-
-                if (docs.isEmpty) {
-                  return const Center(child: Text("No messages yet."));
-                }
-
-                return ListView.builder(
-                  itemCount: docs.length,
-                  itemBuilder: (context, index) {
-                    final data = docs[index].data() as Map<String, dynamic>;
-                    final senderId = docs[index].id;
-                    final role = data['role'] ?? 'unknown';
-                    final lastMessage = data['lastMessage'] ?? '';
-                    final timestamp = (data['lastTimestamp'] as Timestamp).toDate();
-
-                    return FutureBuilder<DocumentSnapshot>(
-                      future: FirebaseFirestore.instance.collection('users').doc(senderId).get(),
-                      builder: (context, userSnapshot) {
-                        String displayName = senderId;
-                        if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
-                          final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
-                          if (userData != null && userData.containsKey('email')) {
-                            displayName = userData['email'];
-                          }
-                        }
-
-                        return Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(18),
-                            border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
-                          ),
-                          child: ListTile(
-                            leading: Icon(
-                              role == "citizen" ? Icons.person : Icons.business,
-                              color: const Color(0xFF9C7B4B),
-                              size: 32,
-                            ),
-                            title: Text(
-                              "From: $displayName",
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "$role - $lastMessage",
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(fontSize: 14),
+            child: showInbox
+                ? StreamBuilder<QuerySnapshot>(
+                    stream: chatStream,
+                    builder: (context, snapshot) {
+                      if (!snapshot.hasData) return const Center(child: CircularProgressIndicator());
+                      final docs = snapshot.data!.docs;
+                      if (docs.isEmpty) {
+                        return const Center(child: Text("No messages yet."));
+                      }
+                      return ListView.builder(
+                        itemCount: docs.length,
+                        itemBuilder: (context, index) {
+                          final data = docs[index].data() as Map<String, dynamic>;
+                          final senderId = docs[index].id;
+                          final role = data['role'] ?? 'unknown';
+                          final lastMessage = data['lastMessage'] ?? '';
+                          final timestamp = (data['lastTimestamp'] as Timestamp).toDate();
+                          return FutureBuilder<DocumentSnapshot>(
+                            future: FirebaseFirestore.instance.collection('users').doc(senderId).get(),
+                            builder: (context, userSnapshot) {
+                              String displayName = senderId;
+                              if (userSnapshot.connectionState == ConnectionState.done && userSnapshot.hasData) {
+                                final userData = userSnapshot.data!.data() as Map<String, dynamic>?;
+                                if (userData != null && userData.containsKey('email')) {
+                                  displayName = userData['email'];
+                                }
+                              }
+                              return Container(
+                                margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(18),
+                                  border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
                                 ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}",
-                                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                                ),
-                              ],
-                            ),
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => AdminChatScreen(
-                                    userId: senderId,
-                                    userRole: role,
+                                child: ListTile(
+                                  leading: Icon(
+                                    role == "citizen" ? Icons.person : Icons.business,
+                                    color: const Color(0xFF9C7B4B),
+                                    size: 32,
                                   ),
+                                  title: Text(
+                                    "From: $displayName",
+                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "$role - $lastMessage",
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(fontSize: 14),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        "${timestamp.hour.toString().padLeft(2, '0')}:${timestamp.minute.toString().padLeft(2, '0')}",
+                                        style: const TextStyle(fontSize: 12, color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) => AdminChatScreen(
+                                          userId: senderId,
+                                          userRole: role,
+                                        ),
+                                      ),
+                                    );
+                                  },
                                 ),
                               );
                             },
-                          ),
-                        );
-                      },
-                    );
-                  },
-                );
-              },
-            ),
+                          );
+                        },
+                      );
+                    },
+                  )
+                : ReportListScreen(),
           ),
         ],
       ),
