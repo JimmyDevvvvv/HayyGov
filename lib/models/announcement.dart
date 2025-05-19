@@ -6,6 +6,7 @@ class Announcement {
   final DateTime timestamp;
   final DateTime? endTime;
   final String id; // Firestore doc ID
+  final String? pdfUrl;
 
   Announcement({
     required this.title,
@@ -15,6 +16,7 @@ class Announcement {
     required this.timestamp,
     this.endTime,
     required this.id,
+    this.pdfUrl,
   });
 
   factory Announcement.fromFirestore(Map<String, dynamic> data, String id) {
@@ -26,6 +28,7 @@ class Announcement {
       timestamp: data['Time'].toDate(),
       endTime: data['EndTime']?.toDate(),
       id: id,
+      pdfUrl: data['PdfUrl'],
     );
   }
 }
