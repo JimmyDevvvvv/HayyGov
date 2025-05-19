@@ -3,6 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'create_announcement_screen.dart';
 import 'pdf_viewer_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
 
 class AnnouncementFeedScreen extends StatelessWidget {
   const AnnouncementFeedScreen({super.key});
@@ -124,6 +126,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                               final infoController = TextEditingController(text: info);
                               final locationController = TextEditingController(text: location);
                               final imageController = TextEditingController(text: picture);
+                              final pdfController = TextEditingController(text: pdfUrl);
                               DateTime? startDate = timestamp != null ? (timestamp is Timestamp ? timestamp.toDate() : null) : null;
                               DateTime? endDate = endTime != null ? (endTime is Timestamp ? endTime.toDate() : null) : null;
                               return StatefulBuilder(
@@ -170,6 +173,14 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                             controller: imageController,
                                             decoration: const InputDecoration(
                                               labelText: 'Image URL',
+                                              border: OutlineInputBorder(),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 12),
+                                          TextField(
+                                            controller: pdfController,
+                                            decoration: const InputDecoration(
+                                              labelText: 'PDF URL',
                                               border: OutlineInputBorder(),
                                             ),
                                           ),
@@ -259,6 +270,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                             'Info': infoController.text.trim(),
                                             'Location': locationController.text.trim(),
                                             'Picture': imageController.text.trim(),
+                                            'PdfUrl': pdfController.text.trim(),
                                             if (startDate != null) 'Time': Timestamp.fromDate(startDate!),
                                             if (endDate != null) 'EndTime': Timestamp.fromDate(endDate!),
                                           });
@@ -381,23 +393,112 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                             ),
                                             if (pdfUrl.isNotEmpty) ...[
                                               const SizedBox(height: 10),
-                                              const SizedBox(height: 4),
-                                              ElevatedButton.icon(
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.red[700],
-                                                  foregroundColor: Colors.white,
-                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                                                ),
-                                                icon: const Icon(Icons.picture_as_pdf),
-                                                label: const Text('View PDF'),
-                                                onPressed: () {
-                                                  Navigator.of(context).push(
-                                                    MaterialPageRoute(
-                                                      builder: (context) => PdfViewerScreen(pdfUrl: pdfUrl),
-                                                    ),
-                                                  );
+                                              GestureDetector(
+                                                onTap: () async {
+                                                  if (await canLaunch(pdfUrl)) {
+                                                    await launch(pdfUrl, forceSafariVC: false, forceWebView: false);
+                                                  } else {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (ctx) => AlertDialog(
+                                                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                                        title: Row(
+                                                          children: const [
+                                                            Icon(Icons.picture_as_pdf, color: Colors.red, size: 28),
+                                                            SizedBox(width: 10),
+                                                            Text('Could not open PDF', style: TextStyle(fontWeight: FontWeight.bold)),
+                                                          ],
+                                                        ),
+                                                        content: Column(
+                                                          mainAxisSize: MainAxisSize.min,
+                                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                                          children: [
+                                                            const Text(
+                                                              'Unable to open the PDF link.',
+                                                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                                            ),
+                                                            const SizedBox(height: 10),
+                                                            Container(
+                                                              padding: const EdgeInsets.all(10),
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.blue.shade50,
+                                                                borderRadius: BorderRadius.circular(8),
+                                                                border: Border.all(color: Colors.blue.shade200),
+                                                              ),
+                                                              child: Row(
+                                                                children: [
+                                                                  const Icon(Icons.link, color: Colors.blue, size: 18),
+                                                                  const SizedBox(width: 6),
+                                                                  Expanded(
+                                                                    child: Text(
+                                                                      pdfUrl,
+                                                                      style: const TextStyle(
+                                                                        color: Colors.blue,
+                                                                        fontSize: 13,
+                                                                        decoration: TextDecoration.underline,
+                                                                      ),
+                                                                      overflow: TextOverflow.ellipsis,
+                                                                    ),
+                                                                  ),
+                                                                  IconButton(
+                                                                    icon: const Icon(Icons.copy, size: 18, color: Colors.blue),
+                                                                    tooltip: 'Copy Link',
+                                                                    onPressed: () async {
+                                                                      await Clipboard.setData(ClipboardData(text: pdfUrl));
+                                                                      Navigator.pop(ctx);
+                                                                      ScaffoldMessenger.of(context).showSnackBar(
+                                                                        const SnackBar(content: Text('PDF link copied to clipboard.')),
+                                                                      );
+                                                                    },
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            const SizedBox(height: 10),
+                                                            const Text(
+                                                              'You can copy the link and open it manually in your browser.',
+                                                              style: TextStyle(fontSize: 13, color: Colors.black54),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        actions: [
+                                                          TextButton(
+                                                            onPressed: () => Navigator.pop(ctx),
+                                                            child: const Text('Close', style: TextStyle(fontWeight: FontWeight.bold)),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  }
                                                 },
+                                                child: Container(
+                                                  padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blue.shade50,
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    border: Border.all(color: Colors.blue.shade200),
+                                                  ),
+                                                  child: Row(
+                                                    mainAxisSize: MainAxisSize.min,
+                                                    children: [
+                                                      const Icon(Icons.picture_as_pdf, color: Colors.blue),
+                                                      const SizedBox(width: 8),
+                                                      Flexible(
+                                                        child: Text(
+                                                          pdfUrl,
+                                                          style: const TextStyle(
+                                                            color: Colors.blue,
+                                                            decoration: TextDecoration.underline,
+                                                            fontWeight: FontWeight.w500,
+                                                          ),
+                                                          overflow: TextOverflow.ellipsis,
+                                                        ),
+                                                      ),
+                                                      const SizedBox(width: 8),
+                                                      const Icon(Icons.open_in_new, color: Colors.blue, size: 18),
+                                                    ],
+                                                  ),
+                                                ),
                                               ),
                                             ],
                                           ],

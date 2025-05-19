@@ -61,7 +61,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                 ),
                 if (a.pdfUrl != null && a.pdfUrl!.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 18),
                     child: GestureDetector(
                       onTap: () async {
                         final url = a.pdfUrl!;
