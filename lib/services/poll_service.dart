@@ -40,4 +40,12 @@ class PollService {
       transaction.update(docRef, updatedFields);
     });
   }
+
+  Future<void> deletePoll(String pollId) async {
+    await _db.collection('Polls').doc(pollId).delete();
+  }
+
+  Future<void> updatePoll(String pollId, Map<String, dynamic> data) async {
+    await _db.collection('Polls').doc(pollId).update(data);
+  }
 }

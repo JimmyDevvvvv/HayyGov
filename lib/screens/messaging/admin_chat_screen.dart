@@ -103,7 +103,7 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
                         margin: const EdgeInsets.symmetric(vertical: 4),
                         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                         decoration: BoxDecoration(
-                          color: isAdmin ? Colors.green[200] : Colors.grey[300],
+                          color: isAdmin ? const Color.fromARGB(255, 255, 255, 255) :  const Color.fromARGB(255, 184, 149, 110),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(msg.text),

@@ -76,7 +76,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
     if (_endDateTime != null) {
       data["EndTime"] = _endDateTime;
     }
-
+    
     try {
       await FirebaseFirestore.instance.collection("Announcements").add(data);
 
