@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart'; // 🧠 Import for Clipboard
 import '../../screens/GOV/pdf_viewer_screen.dart';
 import '../../models/announcement.dart';
 import '../../models/comment.dart';
@@ -33,6 +35,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(a.title)),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -56,26 +59,119 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                   a.info,
                   style: const TextStyle(fontSize: 16),
                 ),
-                if (a.pdfUrl != null && a.pdfUrl!.isNotEmpty) ...[
-                  const SizedBox(height: 4),
-                  ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[700],
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    ),
-                    icon: const Icon(Icons.picture_as_pdf),
-                    label: const Text('View PDF'),
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => PdfViewerScreen(pdfUrl: a.pdfUrl!),
+                if (a.pdfUrl != null && a.pdfUrl!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18),
+                    child: GestureDetector(
+                      onTap: () async {
+                        final url = a.pdfUrl!;
+                        if (await canLaunch(url)) {
+                          await launch(url, forceSafariVC: false, forceWebView: false);
+                        } else {
+                          // Show dialog with copy option
+                          showDialog(
+                            context: context,
+                            builder: (ctx) => AlertDialog(
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                              title: Row(
+                                children: const [
+                                  Icon(Icons.picture_as_pdf, color: Colors.red, size: 28),
+                                  SizedBox(width: 10),
+                                  Text('Could not open PDF', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ],
+                              ),
+                              content: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Unable to open the PDF link.',
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.shade50,
+                                      borderRadius: BorderRadius.circular(8),
+                                      border: Border.all(color: Colors.blue.shade200),
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        const Icon(Icons.link, color: Colors.blue, size: 18),
+                                        const SizedBox(width: 6),
+                                        Expanded(
+                                          child: Text(
+                                            url,
+                                            style: const TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 13,
+                                              decoration: TextDecoration.underline,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          icon: const Icon(Icons.copy, size: 18, color: Colors.blue),
+                                          tooltip: 'Copy Link',
+                                          onPressed: () async {
+                                            await Clipboard.setData(ClipboardData(text: url));
+                                            Navigator.pop(ctx);
+                                            ScaffoldMessenger.of(context).showSnackBar(
+                                              const SnackBar(content: Text('PDF link copied to clipboard.')),
+                                            );
+                                          },
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  const Text(
+                                    'You can copy the link and open it manually in your browser.',
+                                    style: TextStyle(fontSize: 13, color: Colors.black54),
+                                  ),
+                                ],
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(ctx),
+                                  child: const Text('Close', style: TextStyle(fontWeight: FontWeight.bold)),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                        decoration: BoxDecoration(
+                          color: Colors.blue.shade50,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.blue.shade200),
                         ),
-                      );
-                    },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.picture_as_pdf, color: Colors.blue),
+                            const SizedBox(width: 8),
+                            Flexible(
+                              child: Text(
+                                a.pdfUrl!,
+                                style: const TextStyle(
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            const Icon(Icons.open_in_new, color: Colors.blue, size: 18),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ],
                 const SizedBox(height: 8),
                 Text(
                   "📍 ${a.location}",
@@ -127,7 +223,7 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
           ),
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: Colors.grey[100],
+            color: Colors.white,
             child: Row(
               children: [
                 Expanded(
