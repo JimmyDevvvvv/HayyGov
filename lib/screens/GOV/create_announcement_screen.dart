@@ -76,7 +76,7 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
     if (_endDateTime != null) {
       data["EndTime"] = _endDateTime;
     }
-
+    
     try {
       await FirebaseFirestore.instance.collection("Announcements").add(data);
 
@@ -110,6 +110,19 @@ class _CreateAnnouncementScreenState extends State<CreateAnnouncementScreen> {
 
     return Scaffold(
       backgroundColor: bgColor,
+      appBar: AppBar(
+        backgroundColor: bgColor,
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text(
+          'Create Announcement',
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(0),
