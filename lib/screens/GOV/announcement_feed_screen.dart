@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'create_announcement_screen.dart';
+import 'pdf_viewer_screen.dart';
 
 class AnnouncementFeedScreen extends StatelessWidget {
   const AnnouncementFeedScreen({super.key});
@@ -48,6 +49,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                     final picture = data['Picture'] ?? '';
                     final timestamp = data['Time'];
                     final endTime = data['EndTime'];
+                    final pdfUrl = data['PdfUrl'] ?? '';
 
                     return Dismissible(
                       key: Key(id),
@@ -370,9 +372,35 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                           border: Border.all(color: const Color(0xFFD6CFC7)),
                                           borderRadius: BorderRadius.circular(16),
                                         ),
-                                        child: Text(
-                                          info,
-                                          style: const TextStyle(fontSize: 15),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              info,
+                                              style: const TextStyle(fontSize: 15),
+                                            ),
+                                            if (pdfUrl.isNotEmpty) ...[
+                                              const SizedBox(height: 10),
+                                              const SizedBox(height: 4),
+                                              ElevatedButton.icon(
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors.red[700],
+                                                  foregroundColor: Colors.white,
+                                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                                ),
+                                                icon: const Icon(Icons.picture_as_pdf),
+                                                label: const Text('View PDF'),
+                                                onPressed: () {
+                                                  Navigator.of(context).push(
+                                                    MaterialPageRoute(
+                                                      builder: (context) => PdfViewerScreen(pdfUrl: pdfUrl),
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ],
+                                          ],
                                         ),
                                       ),
                                     ),

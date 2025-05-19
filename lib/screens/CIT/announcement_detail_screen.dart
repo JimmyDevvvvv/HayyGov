@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+import '../../screens/GOV/pdf_viewer_screen.dart';
 import '../../models/announcement.dart';
 import '../../models/comment.dart';
 import '../../services/announcement_service.dart';
@@ -57,6 +57,26 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                   a.info,
                   style: const TextStyle(fontSize: 16),
                 ),
+                if (a.pdfUrl != null && a.pdfUrl!.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red[700],
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                    icon: const Icon(Icons.picture_as_pdf),
+                    label: const Text('View PDF'),
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PdfViewerScreen(pdfUrl: a.pdfUrl!),
+                        ),
+                      );
+                    },
+                  ),
+                ],
                 const SizedBox(height: 8),
                 Text(
                   "📍 ${a.location}",
