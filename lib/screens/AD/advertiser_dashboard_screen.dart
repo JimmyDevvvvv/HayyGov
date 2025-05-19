@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import '../CIT/emergency_n.dart';
+import '../CIT/citizen_announcements_polls_screen.dart';
+import '../messaging/chat_screen.dart';
+import '../report/report_form_screen.dart';
+import 'ad_feed_screen.dart';
 import 'create_ad_screen.dart';
 import 'my_ads_screen.dart';
 
@@ -13,80 +18,70 @@ class _AdvertiserDashboardScreenState extends State<AdvertiserDashboardScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const CreateAdScreen(),
-    const MyAdsScreen(),
+    CreateAdScreen(),
+    MyAdsScreen(),
   ];
 
   void _handleNavigation(int index) {
-    setState(() => _currentIndex = index);
+    if (index < _screens.length) {
+      setState(() => _currentIndex = index);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFEFE6DC),
+      backgroundColor: const Color(0xFFE5E0DB),
       body: Column(
         children: [
-          const SizedBox(height: 30), // Status bar spacing
-          // 🔼 Custom Top Navigation
+          const SizedBox(height: 30), // for status bar space
+          // Top Navigation Bar
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                image: const DecorationImage(
-                  image: AssetImage('assets/images/bg.png'),
+                image: DecorationImage(
+                  image: const AssetImage('assets/images/bg.png'),
                   fit: BoxFit.cover,
+                  colorFilter: ColorFilter.mode(
+                    Colors.black.withOpacity(0.4),
+                    BlendMode.dstATop,
+                  ),
                 ),
               ),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              child: Stack(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  // White overlay
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
+                  const Text(
+                    'HayyGov',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      letterSpacing: 3,
                     ),
                   ),
-                  // Navigation Row
+                  const SizedBox(height: 6),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // Create Ad with extra left padding
-                      Padding(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        child: IconButton(
-                          onPressed: () => _handleNavigation(0),
-                          iconSize: 32,
-                          icon: Icon(
-                            Icons.post_add,
-                            color: _currentIndex == 0 ? Colors.black : Colors.black45,
-                          ),
+                      IconButton(
+                        onPressed: () => _handleNavigation(0),
+                        icon: Icon(
+                          Icons.post_add,
+                          color: _currentIndex == 5 ? Colors.black : Colors.black45,
                         ),
+                        tooltip: 'Create Ad',
                       ),
-                      const Text(
-                        'HayyGov - Advertiser',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                          letterSpacing: 2,
+                      IconButton(
+                        onPressed: () => _handleNavigation(1),
+                        icon: Icon(
+                          Icons.edit_note,
+                          color: _currentIndex == 6 ? Colors.black : Colors.black45,
                         ),
-                      ),
-                      // My Ads with extra right padding
-                      Padding(
-                        padding: const EdgeInsets.only(right: 20.0),
-                        child: IconButton(
-                          onPressed: () => _handleNavigation(1),
-                          iconSize: 32,
-                          icon: Icon(
-                            Icons.edit_note,
-                            color: _currentIndex == 1 ? Colors.black : Colors.black45,
-                          ),
-                        ),
+                        tooltip: 'My Ads',
                       ),
                     ],
                   ),
@@ -94,8 +89,7 @@ class _AdvertiserDashboardScreenState extends State<AdvertiserDashboardScreen> {
               ),
             ),
           ),
-
-          // 🔽 Screen content
+          // Screen content
           Expanded(child: _screens[_currentIndex]),
         ],
       ),

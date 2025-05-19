@@ -103,7 +103,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
           // 🔽 Message Input
           Padding(
-            padding: const EdgeInsets.fromLTRB(10, 20, 10, 24),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
             child: Row(
               children: [
                 Expanded(

@@ -14,6 +14,7 @@ class ReportFormScreen extends StatefulWidget {
 
 class _ReportFormScreenState extends State<ReportFormScreen> {
   final TextEditingController _descController = TextEditingController();
+  final TextEditingController _imageUrlController = TextEditingController(); // Add image URL controller
   LatLng? _selectedPoint;
   late final MapController _mapController;
 
@@ -25,6 +26,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
 
   Future<void> _submitReport() async {
     final desc = _descController.text.trim();
+    final imageUrl = _imageUrlController.text.trim(); // Get image URL
 
     if (desc.isEmpty || _selectedPoint == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -43,6 +45,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
         'lng': _selectedPoint!.longitude,
       },
       'userId': user?.uid ?? 'anonymous', // ✅ Save userId
+      'imageUrl': imageUrl, // Save image URL
     });
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -50,6 +53,7 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
     );
 
     _descController.clear();
+    _imageUrlController.clear(); // Clear image URL
     setState(() => _selectedPoint = null);
   }
 
@@ -81,72 +85,120 @@ class _ReportFormScreenState extends State<ReportFormScreen> {
   @override
   Widget build(BuildContext context) {
     final center = LatLng(30.033333, 31.233334); // Default: Cairo
+    final height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Report an Issue")),
-      body: Column(
-        children: [
-          Expanded(
-            flex: 2,
-            child: FlutterMap(
-              mapController: _mapController,
-              options: MapOptions(
-                initialCenter: center,
-                initialZoom: 13,
-                onTap: (tapPosition, point) {
-                  setState(() => _selectedPoint = point);
-                },
-              ),
-              children: [
-                TileLayer(
-                  urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  userAgentPackageName: 'com.example.hayygov',
-                ),
-                if (_selectedPoint != null)
-                  MarkerLayer(
-                    markers: [
-                      Marker(
-                        width: 40,
-                        height: 40,
-                        point: _selectedPoint!,
-                        child: const Icon(Icons.location_pin, size: 40, color: Colors.red),
-                      ),
-                    ],
+      // appBar: AppBar(title: const Text("Report an Issue")),
+      backgroundColor: const Color(0xFFE5E0DB),
+      body: SingleChildScrollView(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(minHeight: height - kToolbarHeight - MediaQuery.of(context).padding.top),
+          child: Column(
+            children: [
+              SizedBox(
+                height: height * 0.3,
+                child: FlutterMap(
+                  mapController: _mapController,
+                  options: MapOptions(
+                    initialCenter: center,
+                    initialZoom: 13,
+                    onTap: (tapPosition, point) {
+                      setState(() => _selectedPoint = point);
+                    },
                   ),
-              ],
-            ),
-          ),
-          Expanded(
-            flex: 1,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  ElevatedButton.icon(
-                    onPressed: _getCurrentLocation,
-                    icon: const Icon(Icons.my_location),
-                    label: const Text("Use My Location"),
-                  ),
-                  const SizedBox(height: 12),
-                  TextField(
-                    controller: _descController,
-                    maxLines: 3,
-                    decoration: const InputDecoration(
-                      labelText: "Describe the problem",
-                      border: OutlineInputBorder(),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      userAgentPackageName: 'com.example.hayygov',
                     ),
-                  ),
-                  const SizedBox(height: 12),
-                  ElevatedButton.icon(
-                    onPressed: _submitReport,
-                    icon: const Icon(Icons.send),
-                    label: const Text("Submit Report"),
-                  ),
-                ],
+                    if (_selectedPoint != null)
+                      MarkerLayer(
+                        markers: [
+                          Marker(
+                            width: 40,
+                            height: 40,
+                            point: _selectedPoint!,
+                            child: const Icon(Icons.location_pin, size: 40, color: Colors.red),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
               ),
-            ),
-          )
-        ],
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: _getCurrentLocation,
+                      icon: const Icon(Icons.my_location, color: Colors.black),
+                      label: const Text("Use My Location", style: TextStyle(color: Colors.black)),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _descController,
+                      maxLines: 3,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "Describe the problem",
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    TextField(
+                      controller: _imageUrlController,
+                      style: const TextStyle(color: Colors.black),
+                      decoration: InputDecoration(
+                        labelText: "Image URL (optional)",
+                        labelStyle: const TextStyle(color: Colors.black),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: const BorderSide(color: Colors.black, width: 2),
+                        ),
+                        fillColor: Colors.white,
+                        filled: true,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: _submitReport,
+                      icon: const Icon(Icons.send, color: Colors.black),
+                      label: const Text("Submit Report", style: TextStyle(color: Colors.black)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

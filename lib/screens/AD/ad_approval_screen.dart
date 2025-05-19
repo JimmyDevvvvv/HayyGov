@@ -66,169 +66,79 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
         .where('approved', isEqualTo: false)
         .orderBy('timestamp', descending: true);
 
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,
       body: Column(
         children: [
-          const SizedBox(height: 30), // for status bar space
-          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/bg.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.4),
-                    BlendMode.dstATop,
-                  ),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'HayyGov',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const AnnouncementFeedScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.campaign,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Announcements',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const EmergencyN()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.phone,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Emergency',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const PollsSection()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.poll,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Polls',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.report,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Reports',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
+          // const SizedBox(height: 30), // for status bar space
           // --- Switch between Ads and Emergency Numbers ---
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 18.0),
-            child: Container(
-              width: 240,
-              height: 48,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(24),
-              ),
-              child: Stack(
-                children: [
-                  AnimatedAlign(
-                    alignment: showAds ? Alignment.centerRight : Alignment.centerLeft,
-                    duration: const Duration(milliseconds: 200),
-                    child: Container(
-                      width: 120,
-                      height: 48,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFBDBDBD),
-                        borderRadius: BorderRadius.circular(24),
-                      ),
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            if (showAds) {
-                              setState(() {
-                                showAds = false;
-                              });
-                              _navigateToEmergencyN(context);
-                            }
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.call,
-                              color: showAds ? Colors.black : Colors.white,
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            // Already on Ads page, do nothing
-                          },
-                          child: Center(
-                            child: Icon(
-                              Icons.check_circle,
-                              color: showAds ? Colors.white : Colors.black,
-                              size: 28,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // --- End Switch ---
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(vertical: 18.0),
+          //   child: Container(
+          //     width: 240,
+          //     height: 48,
+          //     decoration: BoxDecoration(
+          //       color: Colors.white,
+          //       borderRadius: BorderRadius.circular(24),
+          //     ),
+          //     child: Stack(
+          //       children: [
+          //         AnimatedAlign(
+          //           alignment: showAds ? Alignment.centerRight : Alignment.centerLeft,
+          //           duration: const Duration(milliseconds: 200),
+          //           child: Container(
+          //             width: 120,
+          //             height: 48,
+          //             decoration: BoxDecoration(
+          //               color: const Color(0xFFBDBDBD),
+          //               borderRadius: BorderRadius.circular(24),
+          //             ),
+          //           ),
+          //         ),
+          //         Row(
+          //           children: [
+          //             Expanded(
+          //               child: GestureDetector(
+          //                 onTap: () {
+          //                   if (showAds) {
+          //                     setState(() {
+          //                       showAds = false;
+          //                     });
+          //                     _navigateToEmergencyN(context);
+          //                   }
+          //                 },
+          //                 child: Center(
+          //                   child: Icon(
+          //                     Icons.call,
+          //                     color: showAds ? Colors.black : Colors.white,
+          //                     size: 28,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //             Expanded(
+          //               child: GestureDetector(
+          //                 onTap: () {
+          //                   // Already on Ads page, do nothing
+          //                 },
+          //                 child: Center(
+          //                   child: Icon(
+          //                     Icons.check_circle,
+          //                     color: showAds ? Colors.white : Colors.black,
+          //                     size: 28,
+          //                   ),
+          //                 ),
+          //               ),
+          //             ),
+          //           ],
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          // // --- End Switch ---
           Expanded(
             child: GestureDetector(
               behavior: HitTestBehavior.opaque,
@@ -348,7 +258,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                                   const SizedBox(height: 10),
                                   // Approve/Reject buttons row
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
                                     children: [
                                       // Approve button
                                       Container(

@@ -5,6 +5,7 @@ import '../messaging/admin_inbox_screen.dart';
 import '../report/report_list_screen.dart';
 import '../AD/ad_approval_screen.dart';
 import 'announcement_feed_screen.dart';
+import 'gov_dashboard_header.dart';
 
 class GovernmentMainScreen extends StatefulWidget {
   const GovernmentMainScreen({super.key});
@@ -17,10 +18,11 @@ class _GovernmentMainScreenState extends State<GovernmentMainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    _GovDashboard(), // Main dashboard with navigation tiles
-    AdminInboxScreen(),
-    ReportListScreen(),
-    AdApprovalScreen(),
+    _GovDashboard(), // 0: Dashboard
+    AnnouncementFeedScreen(), // 1: Announcements
+    PollsSection(), // 2: Polls
+    AdminInboxScreen(), // 4: Inbox
+    EmergencyN(), // 3: Emergency
   ];
 
   void _navigateTo(int index) {
@@ -30,19 +32,19 @@ class _GovernmentMainScreenState extends State<GovernmentMainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('HayyGov')),
-      body: _screens[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: _navigateTo,
-        selectedItemColor: Colors.red,
-        unselectedItemColor: Colors.grey,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Main'),
-          BottomNavigationBarItem(icon: Icon(Icons.message), label: 'Inbox'),
-          BottomNavigationBarItem(icon: Icon(Icons.report_problem), label: 'Reports'),
-          BottomNavigationBarItem(icon: Icon(Icons.verified), label: 'Approve Ads'),
-        ],
+      backgroundColor: const Color(0xFFE5E0DB),
+      body: SafeArea(
+        child: Column(
+          children: [
+            GovDashboardHeader(onNav: _navigateTo),
+            Expanded(
+              child: IndexedStack(
+                index: _currentIndex,
+                children: _screens,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -58,38 +60,32 @@ class _GovDashboard extends StatelessWidget {
         ListTile(
           leading: const Icon(Icons.announcement),
           title: const Text('Announcements'),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => AnnouncementFeedScreen()),
-          ),
+          onTap: () => parentState?._navigateTo(1),
         ),
         ListTile(
           leading: const Icon(Icons.poll),
           title: const Text('Polls'),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => PollsSection()),
-          ),
+          onTap: () => parentState?._navigateTo(2),
         ),
         ListTile(
           leading: const Icon(Icons.phone),
           title: const Text('Emergency Numbers'),
-          onTap: () => Navigator.of(context).push(
-            MaterialPageRoute(builder: (_) => EmergencyN()),
-          ),
+          onTap: () => parentState?._navigateTo(3),
         ),
         ListTile(
           leading: const Icon(Icons.message),
           title: const Text('Inbox'),
-          onTap: () => parentState?._navigateTo(1),
+          onTap: () => parentState?._navigateTo(4),
         ),
         ListTile(
           leading: const Icon(Icons.report_problem),
           title: const Text('Reports'),
-          onTap: () => parentState?._navigateTo(2),
+          onTap: () => parentState?._navigateTo(5),
         ),
         ListTile(
           leading: const Icon(Icons.verified),
           title: const Text('Approve Ads'),
-          onTap: () => parentState?._navigateTo(3),
+          onTap: () => parentState?._navigateTo(6),
         ),
       ],
     );

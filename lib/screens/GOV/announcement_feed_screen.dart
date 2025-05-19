@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'create_announcement_screen.dart';
-import 'polls_section.dart';
-import 'emergency_n.dart';
-import '../report/report_list_screen.dart';
 
 class AnnouncementFeedScreen extends StatelessWidget {
   const AnnouncementFeedScreen({super.key});
@@ -17,102 +14,12 @@ class AnnouncementFeedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color cardColor = Colors.white;
-    final Color borderColor = const Color(0xFFD6CFC7);
-    final Color accentColor = const Color(0xFF22211F);
-    final Color bgColor = const Color(0xFFF2E9E1);
+    final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
       backgroundColor: bgColor,
       body: Column(
         children: [
-          const SizedBox(height: 30), // for status bar space
-          // --- HayyGov Header with navigation bar (matching citizen_home_screen) ---
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 2),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                image: DecorationImage(
-                  image: const AssetImage('assets/images/bg.png'),
-                  fit: BoxFit.cover,
-                  colorFilter: ColorFilter.mode(
-                    Colors.black.withOpacity(0.4),
-                    BlendMode.dstATop,
-                  ),
-                ),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'HayyGov',
-                    style: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      letterSpacing: 3,
-                    ),
-                  ),
-                  const SizedBox(height: 6),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.campaign,
-                          color: Colors.black,
-                        ),
-                        tooltip: 'Announcements',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const EmergencyN()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.phone,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Emergency',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const PollsSection()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.poll,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Polls',
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => const ReportListScreen()),
-                          );
-                        },
-                        icon: const Icon(
-                          Icons.report,
-                          color: Colors.black45,
-                        ),
-                        tooltip: 'Reports',
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-          // --- End HayyGov Header ---
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
@@ -148,9 +55,9 @@ class AnnouncementFeedScreen extends StatelessWidget {
                     return Container(
                       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                       decoration: BoxDecoration(
-                        color: cardColor,
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(color: borderColor, width: 2),
+                        border: Border.all(color: const Color(0xFFD6CFC7), width: 2),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(18),
@@ -229,7 +136,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
-                                      border: Border.all(color: borderColor),
+                                      border: Border.all(color: const Color(0xFFD6CFC7)),
                                       borderRadius: BorderRadius.circular(16),
                                     ),
                                     child: Text(
@@ -252,14 +159,14 @@ class AnnouncementFeedScreen extends StatelessWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: bgColor, // Match the background color
+        backgroundColor: Color(0xFF2c2c2c), // Match the background color
         onPressed: () {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (_) => const CreateAnnouncementScreen()),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black), // Use black icon for contrast
+        child: const Icon(Icons.add, color: Colors.white), // Use black icon for contrast
       ),
     );
   }
