@@ -2,6 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/message.dart';
+import '../GOV/announcement_feed_screen.dart';
+import '../GOV/polls_section.dart';
+import '../GOV/emergency_n.dart';
+import '../report/report_list_screen.dart';
 
 class AdminChatScreen extends StatefulWidget {
   final String userId;
@@ -57,12 +61,14 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
         .collection("messages")
         .orderBy("timestamp", descending: false);
 
+    final Color bgColor = const Color(0xFFE5E0DB);
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text("Chat with ${widget.userRole}"),
-      ),
+      backgroundColor: bgColor,
       body: Column(
         children: [
+          const SizedBox(height: 30), // for status bar space
+          const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: messagesRef.snapshots(),
@@ -96,26 +102,42 @@ class _AdminChatScreenState extends State<AdminChatScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.fromLTRB(10, 20, 10, 30),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _controller,
                     decoration: const InputDecoration(
-                      hintText: 'Type a reply...',
-                      border: OutlineInputBorder(),
+                      hintText: 'Enter your message...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(20)),
+                        borderSide: BorderSide(color: Colors.brown),
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
                     ),
                   ),
                 ),
                 const SizedBox(width: 8),
                 ElevatedButton(
                   onPressed: sendReply,
-                  child: const Text("Send"),
+                  child: const Icon(Icons.send, color: Colors.black, size: 24),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(15),
+                  ),
                 )
               ],
             ),
-          )
+          ),
         ],
       ),
     );

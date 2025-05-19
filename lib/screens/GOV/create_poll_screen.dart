@@ -62,96 +62,104 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final Color bgColor = const Color(0xFFF4F0ED);
+
     return Scaffold(
-      backgroundColor: const Color(0xFFF4F0ED),
-      appBar: AppBar(title: const Text("Create Poll")),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Poll Title
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: TextFormField(
-                  controller: _titleController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter title... | ...أدخل العنوان',
-                    border: InputBorder.none,
-                  ),
-                  validator: (val) => val!.isEmpty ? 'Required' : null,
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // Poll Options
-              Column(
-                children: List.generate(_optionControllers.length, (index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 5),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            controller: _optionControllers[index],
-                            decoration: InputDecoration(
-                              hintText: index == 0 ? 'Yes | نعم' : index == 1 ? 'No | لا' : 'Option ${index + 1}',
-                              filled: true,
-                              fillColor: const Color(0xFFEEDFD3),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                            ),
-                            validator: (val) => val!.isEmpty ? 'Required' : null,
-                          ),
+      backgroundColor: bgColor,
+      body: SafeArea(
+        child: ListView(
+          children: [
+            // const GovDashboardHeader(), // Removed persistent header
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    // Poll Title
+                    Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      child: TextFormField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          hintText: 'Enter title... | ...أدخل العنوان',
+                          border: InputBorder.none,
                         ),
-                        if (_optionControllers.length > 2)
-                          IconButton(
-                            icon: const Icon(Icons.remove_circle_outline),
-                            onPressed: () => _removeOption(index),
+                        validator: (val) => val!.isEmpty ? 'Required' : null,
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    // Poll Options
+                    Column(
+                      children: List.generate(_optionControllers.length, (index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 5),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextFormField(
+                                  controller: _optionControllers[index],
+                                  decoration: InputDecoration(
+                                    hintText: index == 0 ? 'Yes | نعم' : index == 1 ? 'No | لا' : 'Option ${index + 1}',
+                                    filled: true,
+                                    fillColor: const Color(0xFFEEDFD3),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  ),
+                                  validator: (val) => val!.isEmpty ? 'Required' : null,
+                                ),
+                              ),
+                              if (_optionControllers.length > 2)
+                                IconButton(
+                                  icon: const Icon(Icons.remove_circle_outline),
+                                  onPressed: () => _removeOption(index),
+                                ),
+                            ],
                           ),
-                      ],
+                        );
+                      }),
                     ),
-                  );
-                }),
-              ),
 
-              // ➕ Add Option Button
-              const SizedBox(height: 10),
-              if (_optionControllers.length < 5)
-                GestureDetector(
-                  onTap: _addOption,
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEDFD3),
-                      borderRadius: BorderRadius.circular(10),
+                    // ➕ Add Option Button
+                    const SizedBox(height: 10),
+                    if (_optionControllers.length < 5)
+                      GestureDetector(
+                        onTap: _addOption,
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFEEDFD3),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Icon(Icons.add, size: 28),
+                        ),
+                      ),
+
+                    const SizedBox(height: 30),
+
+                    // Submit Button
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
+                      ),
+                      onPressed: _submit,
+                      child: const Text(
+                        'Submit | تقديم',
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
                     ),
-                    child: const Icon(Icons.add, size: 28),
-                  ),
-                ),
-
-              const Spacer(),
-
-              // Submit Button
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black,
-                  padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                ),
-                onPressed: _submit,
-                child: const Text(
-                  'Submit | تقديم',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

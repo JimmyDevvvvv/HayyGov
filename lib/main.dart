@@ -1,3 +1,4 @@
+import 'package:continuehayygov/screens/auth_page_view.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
@@ -9,21 +10,22 @@ import './screens/CIT/citizen_home_screen.dart';
 import './screens/AD/advertiser_dashboard_screen.dart';
 import 'firebase_options.dart';
 import './screens/GOV/government_main_screen.dart';
+import 'services/notification_service.dart'; // ✅ NEW
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>(); // ✅ NEW
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
     await dotenv.load();
-    // print('Environment variables loaded:');
-    // print(dotenv.env);
-  } catch (e) {
-    // print('Failed to load .env file: $e');
-  }
+  } catch (e) {}
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await NotificationService().init(); // ✅ NEW
 
   runApp(const MyApp());
 }
@@ -39,8 +41,9 @@ class MyApp extends StatelessWidget {
         title: 'HayyGov',
         theme: ThemeData(primarySwatch: Colors.red),
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey, // ✅ NEW
         routes: {
-          '/': (context) => const LoginScreen(),
+          '/': (context) => const AuthPageView(),
           '/citizenHome': (context) => const CitizenHomeScreen(),
           '/govHome': (context) => const GovernmentMainScreen(),
           '/advertiserDashboard': (context) => const AdvertiserDashboardScreen(),

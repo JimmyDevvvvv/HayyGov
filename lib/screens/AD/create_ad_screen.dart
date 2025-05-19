@@ -64,30 +64,50 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Create Advertisement")),
+      backgroundColor: const Color(0xFFE5E0DB),
+      appBar: AppBar(title: const Text("Create Advertisement"),
+        backgroundColor: const Color(0xFFE5E0DB),
+        foregroundColor: Colors.black,
+),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
           children: [
             TextField(
               controller: _titleController,
-              decoration: const InputDecoration(labelText: "Ad Title"),
+              decoration: const InputDecoration(
+                labelText: "Ad Title",
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _descController,
               maxLines: 4,
-              decoration: const InputDecoration(labelText: "Description"),
+              decoration: const InputDecoration(
+                labelText: "Description",
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _imageUrlController,
-              decoration: const InputDecoration(labelText: "Image URL (link)"),
+              decoration: const InputDecoration(
+                labelText: "Image URL (link)",
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
             const SizedBox(height: 10),
             TextField(
               controller: _locationController,
-              decoration: const InputDecoration(labelText: "Location (optional)"),
+              decoration: const InputDecoration(
+                labelText: "Location (optional)",
+                filled: true,
+                fillColor: Colors.white,
+              ),
             ),
             const SizedBox(height: 20),
             ElevatedButton.icon(

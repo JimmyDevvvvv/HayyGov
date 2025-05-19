@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart'; // ✅ NEW
 
 class AuthProvider with ChangeNotifier {
   String _token = "";
@@ -14,13 +15,31 @@ class AuthProvider with ChangeNotifier {
   bool get isAuthenticated => _authenticated;
 
   String get token {
-    if (_expiryDate != null && _expiryDate!.isAfter(DateTime.now()) && _token.isNotEmpty) {
+    if (_expiryDate != null &&
+        _expiryDate!.isAfter(DateTime.now()) &&
+        _token.isNotEmpty) {
       return _token;
     }
     return "";
   }
 
   String get userId => _userId;
+
+  // ✅ NEW: Save FCM token to Firestore
+  Future<void> _saveFcmToken() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user == null) return;
+
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) {
+      await FirebaseFirestore.instance.collection('users').doc(user.uid).set(
+        {
+          'fcmToken': token,
+        },
+        SetOptions(merge: true),
+      );
+    }
+  }
 
   Future<String> signup({required String email, required String password}) async {
     final apiKey = dotenv.env['FIREBASE_API_KEY'];
@@ -53,21 +72,15 @@ class AuthProvider with ChangeNotifier {
 
       String uid = userCredential.user!.uid;
 
-      // Ensure Firestore is initialized before adding data
       FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-      // print("Storing user data in Firestore with role: citizen");
       await firestore.collection('users').doc(uid).set({
         'email': email,
         'role': 'citizen',
         'createdAt': FieldValue.serverTimestamp(),
-      }).then((_) {
-        // print("Citizen data successfully added to Firestore.");
-      }).catchError((error) {
-        // print("Failed to add citizen data to Firestore: $error");
       });
 
-      // print("Citizen account created!");
+      await _saveFcmToken(); // ✅ ADDED
     } catch (e) {
       // print("Error signing up: $e");
     }
@@ -80,17 +93,15 @@ class AuthProvider with ChangeNotifier {
 
       String uid = userCredential.user!.uid;
 
-      // Store user with selected role
       await FirebaseFirestore.instance.collection('users').doc(uid).set({
         'email': email,
         'role': role,
         'createdAt': FieldValue.serverTimestamp(),
       });
 
-      // print("User with role $role successfully added to Firestore.");
+      await _saveFcmToken(); // ✅ ADDED
       return "success";
     } catch (e) {
-      // print("Error signing up with role: $e");
       return e.toString();
     }
   }
@@ -102,17 +113,15 @@ class AuthProvider with ChangeNotifier {
 
       String uid = userCredential.user!.uid;
 
-      // print("Fetching user role from Firestore for UID: $uid");
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
           .get();
 
       if (!userDoc.exists) {
-        // print("User record not found in Firestore. Adding default citizen record.");
         await FirebaseFirestore.instance.collection('users').doc(uid).set({
           'email': email,
-          'role': 'citizen', // Default role
+          'role': 'citizen',
           'createdAt': FieldValue.serverTimestamp(),
         });
       }
@@ -120,17 +129,14 @@ class AuthProvider with ChangeNotifier {
       userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(uid)
-          .get()
-          .catchError((error) {
-            // print("Failed to fetch user role: $error");
-            return FirebaseFirestore.instance.collection('users').doc(uid).get();
-          });
+          .get();
+
+      await _saveFcmToken(); // ✅ ADDED
 
       if (!context.mounted) return;
 
       if (userDoc.exists) {
         String role = userDoc['role'];
-        // print("User role fetched: $role");
 
         if (role == 'citizen') {
           Navigator.pushReplacementNamed(context, '/citizenHome');
@@ -138,11 +144,7 @@ class AuthProvider with ChangeNotifier {
           Navigator.pushReplacementNamed(context, '/govHome');
         } else if (role == 'advertiser') {
           Navigator.pushReplacementNamed(context, '/advertiserDashboard');
-        } else {
-          // print("Unknown role.");
         }
-      } else {
-        // print("User record not found in Firestore.");
       }
     } catch (e) {
       // print("Login failed: $e");

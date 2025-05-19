@@ -12,9 +12,12 @@ class AdFeedScreen extends StatelessWidget {
         .orderBy('timestamp', descending: true);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Neighborhood Ads"),
-      ),
+       backgroundColor: const Color(0xFFE5E0DB),
+      // appBar: AppBar(
+      //   title: const Text("Neighborhood Ads"),
+      //   backgroundColor: Colors.brown,
+      //   foregroundColor: Colors.white,
+      // ),
       body: StreamBuilder<QuerySnapshot>(
         stream: approvedAdsRef.snapshots(),
         builder: (context, snapshot) {
@@ -73,7 +76,13 @@ class AdFeedScreen extends StatelessWidget {
                         if (imageUrl != null && imageUrl.isNotEmpty)
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Image.network(imageUrl, height: 200, fit: BoxFit.cover),
+                            child: Center(
+                              child: Image.network(
+                                imageUrl,
+                                height: 200,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
                           ),
                       ],
                     ),

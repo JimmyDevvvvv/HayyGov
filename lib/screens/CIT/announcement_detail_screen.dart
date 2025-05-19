@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import '../../models/announcement.dart';
 import '../../models/comment.dart';
 import '../../services/announcement_service.dart';
+import '../../services/comment_filter_service.dart'; // 🧠 Import the AI filter
 
 class AnnouncementDetailScreen extends StatefulWidget {
   final Announcement announcement;
@@ -67,9 +69,10 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                   style: const TextStyle(color: Colors.grey),
                 ),
                 const Divider(height: 30),
-                const Text("Comments",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                const Text(
+                  "Comments",
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 10),
                 StreamBuilder<List<CommentModel>>(
                   stream: service.getComments(a.id),
@@ -129,11 +132,36 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                   onPressed: () async {
                     final text = _controller.text.trim();
                     if (text.isEmpty) return;
+
+                    // 🔍 Check for offensive content
+                    final isOffensive =
+                        await CommentFilterService.isOffensive(text);
+
+                    if (isOffensive) {
+                      showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                          title: const Text("Inappropriate Comment"),
+                          content: const Text(
+                              "Your comment seems offensive and cannot be posted."),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context),
+                              child: const Text("OK"),
+                            ),
+                          ],
+                        ),
+                      );
+                      return;
+                    }
+
+                    // ✅ Submit the comment
                     final comment = CommentModel(
                       text: text,
                       author: anonymous ? "Anonymous" : "You",
                       timestamp: DateTime.now(),
                     );
+
                     await service.addComment(a.id, comment);
                     _controller.clear();
                   },
