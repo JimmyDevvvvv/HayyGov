@@ -18,6 +18,11 @@ class NotificationService {
     final token = await _messaging.getToken();
     print("🔐 FCM Token: $token");
 
+    // 🔥 Subscribe to global topic for citizens (or all users)
+   await _messaging.subscribeToTopic('allUsers');
+   print('📩 Subscribed to topic: allUsers');
+
+
     // Initialize local notifications
     const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidSettings);
