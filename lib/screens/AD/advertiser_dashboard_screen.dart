@@ -71,7 +71,7 @@ class _AdvertiserDashboardScreenState extends State<AdvertiserDashboardScreen> {
                         onPressed: () => _handleNavigation(0),
                         icon: Icon(
                           Icons.post_add,
-                          color: _currentIndex == 5 ? Colors.black : Colors.black45,
+                          color: _currentIndex == 0 ? Colors.black : Colors.black45,
                         ),
                         tooltip: 'Create Ad',
                       ),
@@ -79,7 +79,7 @@ class _AdvertiserDashboardScreenState extends State<AdvertiserDashboardScreen> {
                         onPressed: () => _handleNavigation(1),
                         icon: Icon(
                           Icons.edit_note,
-                          color: _currentIndex == 6 ? Colors.black : Colors.black45,
+                          color: _currentIndex == 1 ? Colors.black : Colors.black45,
                         ),
                         tooltip: 'My Ads',
                       ),

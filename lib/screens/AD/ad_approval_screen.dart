@@ -69,7 +69,7 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
     final Color bgColor = const Color(0xFFE5E0DB);
 
     return Scaffold(
-      backgroundColor: bgColor,
+      backgroundColor: const Color(0xFFE5E0DB),
       body: Column(
         children: [
           // const SizedBox(height: 30), // for status bar space
