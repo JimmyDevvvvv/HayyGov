@@ -141,7 +141,60 @@ class _LoginScreenState extends State<LoginScreen> {
 
               // Bottom buttons or loading spinner
               isLoading
-                  ? const CircularProgressIndicator()
+                  ? Column(
+                      children: [
+                        const SizedBox(height: 24),
+                        Container(
+                          width: 110,
+                          height: 110,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF2c2c2c),
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.13),
+                                blurRadius: 12,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
+                          ),
+                          child: Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                // Image.asset(
+                                //   'assets/images/bg.png',
+                                //   width: 36,
+                                //   height: 36,
+                                // ),
+                                // const SizedBox(height: 10),
+                                const Text(
+                                  'Logging in...',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    letterSpacing: 1.1,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                SizedBox(
+                                  width: 26,
+                                  height: 26,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                      ],
+                    )
                   : SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(

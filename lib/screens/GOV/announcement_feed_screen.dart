@@ -140,117 +140,122 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                         Text('Edit Announcement'),
                                       ],
                                     ),
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          TextField(
-                                            controller: titleController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Title',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          TextField(
-                                            controller: infoController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Info',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                            maxLines: 2,
-                                          ),
-                                          const SizedBox(height: 12),
-                                          TextField(
-                                            controller: locationController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Location',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          TextField(
-                                            controller: imageController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'Image URL',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 12),
-                                          TextField(
-                                            controller: pdfController,
-                                            decoration: const InputDecoration(
-                                              labelText: 'PDF URL',
-                                              border: OutlineInputBorder(),
-                                            ),
-                                          ),
-                                          const SizedBox(height: 16),
-                                          Row(
+                                    content: SizedBox(
+                                      height: MediaQuery.of(context).size.height * 0.6,
+                                      width: 400,
+                                      child: Scrollbar(
+                                        thumbVisibility: true,
+                                        thickness: 6,
+                                        radius: const Radius.circular(10),
+                                        child: SingleChildScrollView(
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
                                             children: [
-                                              const Text('Start:'),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    final picked = await showDatePicker(
-                                                      context: context,
-                                                      initialDate: startDate ?? DateTime.now(),
-                                                      firstDate: DateTime(2020),
-                                                      lastDate: DateTime(2100),
-                                                    );
-                                                    if (picked != null) {
-                                                      setState(() => startDate = picked);
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(color: Colors.grey),
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                    child: Text(
-                                                      startDate != null ? DateFormat('yyyy/MM/dd').format(startDate!) : 'Select date',
-                                                      style: const TextStyle(fontSize: 14),
+                                              _StyledTextField(
+                                                controller: titleController,
+                                                label: 'Title',
+                                                icon: Icons.title,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _StyledTextField(
+                                                controller: infoController,
+                                                label: 'Info',
+                                                icon: Icons.info_outline,
+                                                maxLines: 2,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _StyledTextField(
+                                                controller: locationController,
+                                                label: 'Location',
+                                                icon: Icons.location_on,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _StyledTextField(
+                                                controller: imageController,
+                                                label: 'Image URL',
+                                                icon: Icons.image,
+                                              ),
+                                              const SizedBox(height: 12),
+                                              _StyledTextField(
+                                                controller: pdfController,
+                                                label: 'PDF URL',
+                                                icon: Icons.picture_as_pdf,
+                                              ),
+                                              const SizedBox(height: 16),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.calendar_today, size: 18, color: Colors.brown),
+                                                  const SizedBox(width: 8),
+                                                  const Text('Start:'),
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        final picked = await showDatePicker(
+                                                          context: context,
+                                                          initialDate: startDate ?? DateTime.now(),
+                                                          firstDate: DateTime(2020),
+                                                          lastDate: DateTime(2100),
+                                                        );
+                                                        if (picked != null) {
+                                                          setState(() => startDate = picked);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.grey[100],
+                                                          border: Border.all(color: Colors.blueGrey.shade100),
+                                                          borderRadius: BorderRadius.circular(10),
+                                                        ),
+                                                        child: Text(
+                                                          startDate != null ? DateFormat('yyyy/MM/dd').format(startDate!) : 'Select date',
+                                                          style: const TextStyle(fontSize: 14),
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
-                                                ),
+                                                ],
+                                              ),
+                                              const SizedBox(height: 12),
+                                              Row(
+                                                children: [
+                                                  const Icon(Icons.event, size: 18, color: Colors.brown),
+                                                  const SizedBox(width: 8),
+                                                  const Text('End:'),
+                                                  const SizedBox(width: 8),
+                                                  Expanded(
+                                                    child: InkWell(
+                                                      onTap: () async {
+                                                        final picked = await showDatePicker(
+                                                          context: context,
+                                                          initialDate: endDate ?? DateTime.now(),
+                                                          firstDate: DateTime(2020),
+                                                          lastDate: DateTime(2100),
+                                                        );
+                                                        if (picked != null) {
+                                                          setState(() => endDate = picked);
+                                                        }
+                                                      },
+                                                      child: Container(
+                                                        padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 14),
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.grey[100],
+                                                          border: Border.all(color: Colors.blueGrey.shade100),
+                                                          borderRadius: BorderRadius.circular(10),
+                                                        ),
+                                                        child: Text(
+                                                          endDate != null ? DateFormat('yyyy/MM/dd').format(endDate!) : 'Select date',
+                                                          style: const TextStyle(fontSize: 14),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
                                               ),
                                             ],
                                           ),
-                                          const SizedBox(height: 12),
-                                          Row(
-                                            children: [
-                                              const Text('End:'),
-                                              const SizedBox(width: 8),
-                                              Expanded(
-                                                child: InkWell(
-                                                  onTap: () async {
-                                                    final picked = await showDatePicker(
-                                                      context: context,
-                                                      initialDate: endDate ?? DateTime.now(),
-                                                      firstDate: DateTime(2020),
-                                                      lastDate: DateTime(2100),
-                                                    );
-                                                    if (picked != null) {
-                                                      setState(() => endDate = picked);
-                                                    }
-                                                  },
-                                                  child: Container(
-                                                    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(color: Colors.grey),
-                                                      borderRadius: BorderRadius.circular(8),
-                                                    ),
-                                                    child: Text(
-                                                      endDate != null ? DateFormat('yyyy/MM/dd').format(endDate!) : 'Select date',
-                                                      style: const TextStyle(fontSize: 14),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
+                                        ),
                                       ),
                                     ),
                                     actions: [
@@ -260,7 +265,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                                       ),
                                       ElevatedButton.icon(
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.blue,
+                                          backgroundColor: Color(0xFF8B5C2A), // Brown background
                                           foregroundColor: Colors.white,
                                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                                         ),
@@ -542,5 +547,53 @@ class AnnouncementFeedScreen extends StatelessWidget {
           child: const Icon(Icons.add, color: Colors.white), // Use white icon for contrast
         ),
       );
+  }
+}
+
+class _StyledTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String label;
+  final IconData icon;
+  final int maxLines;
+  const _StyledTextField({
+    required this.controller,
+    required this.label,
+    required this.icon,
+    this.maxLines = 1,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: SizedBox(
+        height: maxLines > 1 ? 64 : 48,
+        child: TextField(
+          controller: controller,
+          maxLines: maxLines,
+          style: const TextStyle(fontSize: 15),
+          decoration: InputDecoration(
+            prefixIcon: Icon(icon, color: Colors.brown, size: 22),
+            labelText: label,
+            labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+            filled: true,
+            fillColor: Colors.grey[100],
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFD6CFC7)),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Color(0xFFD6CFC7)),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(color: Colors.blue, width: 2),
+            ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 14),
+          ),
+        ),
+      ),
+    );
   }
 }
