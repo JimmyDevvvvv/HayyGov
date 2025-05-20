@@ -222,15 +222,25 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
             ),
           ),
           Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            color: Colors.white,
+            decoration: BoxDecoration(
+              color: const Color(0xFFF7F5F2), // subtle background, matches input fields
+              border: Border.all(color: Color(0xFFB0A99F), width: 1.5),
+              borderRadius: BorderRadius.circular(30),
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration:
-                        const InputDecoration(hintText: 'Write a comment...'),
+                    decoration: const InputDecoration(
+                      fillColor: const Color(0xFFF7F5F2),
+                      hintText: 'Write a comment...',
+                      border: InputBorder.none,
+                      isDense: true,
+                      contentPadding: EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+                    ),
                   ),
                 ),
                 Column(
@@ -238,8 +248,11 @@ class _AnnouncementDetailScreenState extends State<AnnouncementDetailScreen> {
                     const Text("Anon"),
                     Switch(
                       value: anonymous,
-                      onChanged: (val) =>
-                          setState(() => anonymous = val),
+                      onChanged: (val) => setState(() => anonymous = val),
+                      activeColor: const Color(0xFF22211F),
+                      activeTrackColor: const Color(0xFFB0A99F),
+                      inactiveThumbColor: Colors.grey.shade400,
+                      inactiveTrackColor: Colors.grey.shade300,
                     ),
                   ],
                 ),

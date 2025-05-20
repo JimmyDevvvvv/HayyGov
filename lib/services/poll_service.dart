@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/poll.dart';
+import '../models/comment.dart';
 
 class PollService {
   final _db = FirebaseFirestore.instance;
@@ -47,5 +48,28 @@ class PollService {
 
   Future<void> updatePoll(String pollId, Map<String, dynamic> data) async {
     await _db.collection('Polls').doc(pollId).update(data);
+  }
+
+  // 💬 Stream comments for a poll
+  Stream<List<CommentModel>> getComments(String pollId) {
+    return _db
+        .collection('Polls')
+        .doc(pollId)
+        .collection('Comments')
+        .orderBy('Timestamp')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => CommentModel.fromFirestore(doc.data())).toList();
+    });
+  }
+
+  // 📝 Add a comment to a poll
+  Future<void> addComment(String pollId, CommentModel comment) async {
+    final data = comment.toMap();
+    await _db
+        .collection('Polls')
+        .doc(pollId)
+        .collection('Comments')
+        .add(data);
   }
 }
