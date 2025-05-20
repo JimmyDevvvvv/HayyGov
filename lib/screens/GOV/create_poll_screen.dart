@@ -36,7 +36,11 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final title = _titleController.text.trim();
-    final options = _optionControllers.map((c) => c.text.trim()).where((o) => o.isNotEmpty).toList();
+    final options =
+        _optionControllers
+            .map((c) => c.text.trim())
+            .where((o) => o.isNotEmpty)
+            .toList();
 
     if (options.length < 2) {
       if (!mounted) return;
@@ -46,10 +50,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
       return;
     }
 
-    final Map<String, dynamic> pollData = {
-      'Title': title,
-      'Voters': [],
-    };
+    final Map<String, dynamic> pollData = {'Title': title, 'Voters': []};
 
     for (var option in options) {
       pollData[option] = 0;
@@ -90,26 +91,34 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                 child: Column(
                   children: [
                     // Poll Title
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: TextFormField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter title... | ...أدخل العنوان',
-                          border: InputBorder.none,
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter title... | ...أدخل العنوان',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.black),
                         ),
-                        validator: (val) => val!.isEmpty ? 'Required' : null,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.brown, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
+                      validator: (val) => val!.isEmpty ? 'Required' : null,
                     ),
                     const SizedBox(height: 20),
 
                     // Poll Options
                     Column(
-                      children: List.generate(_optionControllers.length, (index) {
+                      children: List.generate(_optionControllers.length, (
+                        index,
+                      ) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 5),
                           child: Row(
@@ -118,14 +127,20 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                                 child: TextFormField(
                                   controller: _optionControllers[index],
                                   decoration: InputDecoration(
-                                    hintText: index == 0 ? 'Yes | نعم' : index == 1 ? 'No | لا' : 'Option ${index + 1}',
+                                    hintText:
+                                        index == 0
+                                            ? 'Yes | نعم'
+                                            : index == 1
+                                            ? 'No | لا'
+                                            : 'Option ${index + 1}',
                                     filled: true,
-                                    fillColor: const Color(0xFFEEDFD3),
+                                    fillColor: const Color(0xFFEAD8C5),
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                   ),
-                                  validator: (val) => val!.isEmpty ? 'Required' : null,
+                                  validator:
+                                      (val) => val!.isEmpty ? 'Required' : null,
                                 ),
                               ),
                               if (_optionControllers.length > 2)
@@ -147,7 +162,7 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                         child: Container(
                           padding: const EdgeInsets.all(12),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFEEDFD3),
+                            color: const Color(0xFFEAD8C5),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: const Icon(Icons.add, size: 28),
@@ -157,15 +172,43 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                     const SizedBox(height: 30),
 
                     // Submit Button
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 12),
-                      ),
-                      onPressed: _submit,
-                      child: const Text(
-                        'Submit | تقديم',
-                        style: TextStyle(color: Colors.white, fontSize: 16),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 60),
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          elevation: 0,
+                          minimumSize: const Size(0, 40),
+                        ),
+                        onPressed: _submit,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 25),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Text(
+                                    "Submit",
+                                    style: TextStyle(fontSize: 16, color: Colors.white),
+                                  ),
+                                  SizedBox(width: 12),
+                                  Text(
+                                    "تقديم",
+                                    style: TextStyle(fontSize: 16, color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

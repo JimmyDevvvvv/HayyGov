@@ -47,6 +47,7 @@ class _EmergencyNState extends State<EmergencyN> {
     String iconUrl = '';
 
     showModalBottomSheet(
+      backgroundColor: Color(0xFFE5E0DB),
       context: context,
       builder: (BuildContext context) {
         return Padding(
@@ -54,22 +55,55 @@ class _EmergencyNState extends State<EmergencyN> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              // Name field with Arabic label inside
               TextField(
-                decoration: InputDecoration(labelText: 'Name'),
+                decoration: const InputDecoration(
+                  labelText: 'Emergency | الطوارئ',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  ),
+                ),
                 onChanged: (value) => name = value,
               ),
+              const SizedBox(height: 14),
+              // Number field with Arabic label inside
               TextField(
-                decoration: InputDecoration(labelText: 'Number'),
+                decoration: const InputDecoration(
+                  labelText: 'Number | الرقم',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  ),
+                ),
                 keyboardType: TextInputType.phone,
                 onChanged: (value) => number = value,
               ),
+              const SizedBox(height: 14),
+              // Icon URL field
               TextField(
-                decoration: InputDecoration(labelText: 'Icon URL'),
+                decoration: const InputDecoration(
+                  labelText: 'Icon URL | رابط الأيقونة',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(30)),
+                    borderSide: BorderSide(color: Colors.black, width: 1),
+                  ),
+                ),
                 keyboardType: TextInputType.url,
                 onChanged: (value) => iconUrl = value,
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF2c2c2c),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(color: Color(0xFF2c2c2c)), // Match the background color
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 18), // Smaller padding
+                  minimumSize: const Size(0, 36), // Reduce min height
+                  elevation: 0,
+                ),
                 onPressed: () async {
                   final newContact = EmergencyContact(
                     id: uuid.v4(),
@@ -81,7 +115,21 @@ class _EmergencyNState extends State<EmergencyN> {
                   if (!context.mounted) return;
                   Navigator.pop(context);
                 },
-                child: Text('Save'),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Text(
+                      "Save",
+                      style: TextStyle(fontSize: 15, color: Colors.white), // Smaller font
+                    ),
+                    SizedBox(width: 8), // Less space
+                    Text(
+                      "حفظ",
+                      style: TextStyle(fontSize: 15, color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -146,7 +194,7 @@ class _EmergencyNState extends State<EmergencyN> {
                                 width: 120,
                                 height: 48,
                                 decoration: BoxDecoration(
-                                  color: const Color(0xFFBDBDBD),
+                                  color: const Color.fromARGB(255, 62, 59, 45),
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                               ),
@@ -161,7 +209,7 @@ class _EmergencyNState extends State<EmergencyN> {
                                     child: Center(
                                       child: Icon(
                                         Icons.call,
-                                        color: !showAds ? Colors.white : Colors.black,
+                                        color: !showAds ? Colors.white : Colors.red,
                                         size: 28,
                                       ),
                                     ),
@@ -213,6 +261,52 @@ class _EmergencyNState extends State<EmergencyN> {
                                       final contact = contacts[index];
                                       return Dismissible(
                                         key: Key(contact.id),
+                                        confirmDismiss: (direction) async {
+                                          final confirm = await showDialog<bool>(
+                                            context: context,
+                                            builder: (context) => AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius: BorderRadius.circular(18),
+                                              ),
+                                              backgroundColor: Colors.white,
+                                              title: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: const [
+                                                  Icon(Icons.delete_forever_rounded, color: Colors.red, size: 38),
+                                                  SizedBox(height: 10),
+                                                  Text('Delete Emergency Contact', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                                                ],
+                                              ),
+                                              content: const Text(
+                                                'This will permanently remove the contact. Are you sure?',
+                                                style: TextStyle(fontSize: 16, color: Colors.black87),
+                                              ),
+                                              actions: [
+                                                TextButton(
+                                                  style: TextButton.styleFrom(
+                                                    foregroundColor: Colors.black,
+                                                    textStyle: const TextStyle(fontWeight: FontWeight.w500),
+                                                  ),
+                                                  onPressed: () => Navigator.of(context).pop(false),
+                                                  child: const Text('Cancel'),
+                                                ),
+                                                ElevatedButton(
+                                                  style: ElevatedButton.styleFrom(
+                                                    backgroundColor: Colors.red,
+                                                    foregroundColor: Colors.white,
+                                                    shape: RoundedRectangleBorder(
+                                                      borderRadius: BorderRadius.circular(8),
+                                                    ),
+                                                    elevation: 0,
+                                                  ),
+                                                  onPressed: () => Navigator.of(context).pop(true),
+                                                  child: const Text('Delete'),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                          return confirm == true;
+                                        },
                                         onDismissed: (direction) {
                                           _deleteEmergencyContact(contact);
                                         },

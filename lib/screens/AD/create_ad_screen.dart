@@ -65,10 +65,6 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFE5E0DB),
-      appBar: AppBar(title: const Text("Create Advertisement"),
-        backgroundColor: const Color(0xFFE5E0DB),
-        foregroundColor: Colors.black,
-),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: ListView(
@@ -110,10 +106,29 @@ class _CreateAdScreenState extends State<CreateAdScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _isUploading ? null : _submitAd,
-              icon: const Icon(Icons.post_add),
-              label: Text(_isUploading ? "Posting..." : "Post Ad"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ConstrainedBox(
+                  constraints: const BoxConstraints(minWidth: 0, maxWidth: 220),
+                  child: ElevatedButton.icon(
+                    onPressed: _isUploading ? null : _submitAd,
+                    icon: const Icon(Icons.post_add, color: Colors.white),
+                    label: Text(
+                      _isUploading ? "Posting..." : "Post Ad",
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      elevation: 0, // Remove shadow
+                      backgroundColor: Color(0xFF2c2c2c), // Button background
+                      foregroundColor: Colors.white, // Icon/text color fallback
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             )
           ],
         ),

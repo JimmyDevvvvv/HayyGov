@@ -12,7 +12,7 @@ class AdFeedScreen extends StatelessWidget {
         .orderBy('timestamp', descending: true);
 
     return Scaffold(
-       backgroundColor: const Color(0xFFE5E0DB),
+      backgroundColor: const Color(0xFFE5E0DB),
       // appBar: AppBar(
       //   title: const Text("Neighborhood Ads"),
       //   backgroundColor: Colors.brown,

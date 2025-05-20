@@ -45,7 +45,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
       backgroundColor: bgColor,
       body: Column(
         children: [
-          const SizedBox(height: 30), // for status bar space
+          //const SizedBox(height: 30), // for status bar space
           // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -68,7 +68,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                         width: 120,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: const Color(0xFFBDBDBD),
+                          color: const Color.fromARGB(255, 62, 59, 45),
                           borderRadius: BorderRadius.circular(24),
                         ),
                       ),
@@ -83,9 +83,9 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                             },
                             child: Center(
                               child: Icon(
-                                Icons.inbox,
-                                color: showInbox ? Colors.white : Colors.black,
-                                size: 28,
+                                Icons.messenger,
+                                color: showInbox ? Colors.white : Colors.green,
+                                size: 30,
                               ),
                             ),
                           ),
@@ -98,9 +98,9 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
                             },
                             child: Center(
                               child: Icon(
-                                Icons.description,
-                                color: showInbox ? Colors.black : Colors.white,
-                                size: 28,
+                                Icons.error,
+                                color: showInbox ? Colors.orange : Colors.white,
+                                size: 30,
                               ),
                             ),
                           ),
@@ -112,8 +112,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
               ),
             ),
           ),
-          // --- End Switch ---
-          const SizedBox(height: 10),
+          // --- End Switch --- Increased space below switch, matches emergency_n
           Expanded(
             child: showInbox
                 ? StreamBuilder<QuerySnapshot>(

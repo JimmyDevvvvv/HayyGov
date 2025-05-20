@@ -25,24 +25,70 @@ class MyAdsScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        title: const Text("Edit Ad"),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: Row(
+          children: const [
+            Icon(Icons.edit_note, color: Colors.brown, size: 28),
+            SizedBox(width: 8),
+            Text("Edit Ad", style: TextStyle(fontWeight: FontWeight.bold)),
+          ],
+        ),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              TextField(controller: titleController, decoration: const InputDecoration(labelText: "Title")),
-              const SizedBox(height: 8),
-              TextField(controller: descController, decoration: const InputDecoration(labelText: "Description")),
-              const SizedBox(height: 8),
-              TextField(controller: imageUrlController, decoration: const InputDecoration(labelText: "Image URL (optional)")),
-              const SizedBox(height: 8),
-              TextField(controller: locationController, decoration: const InputDecoration(labelText: "Location (optional)")),
+              TextField(
+                controller: titleController,
+                decoration: InputDecoration(
+                  labelText: "Title",
+                  filled: true,
+                  fillColor: Colors.brown.shade50,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: descController,
+                maxLines: 3,
+                decoration: InputDecoration(
+                  labelText: "Description",
+                  filled: true,
+                  fillColor: Colors.brown.shade50,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: imageUrlController,
+                decoration: InputDecoration(
+                  labelText: "Image URL (optional)",
+                  filled: true,
+                  fillColor: Colors.brown.shade50,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: locationController,
+                decoration: InputDecoration(
+                  labelText: "Location (optional)",
+                  filled: true,
+                  fillColor: Colors.brown.shade50,
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+                ),
+              ),
             ],
           ),
         ),
+        actionsPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-          ElevatedButton(
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("Cancel"),
+            style: TextButton.styleFrom(foregroundColor: Colors.black),
+          ),
+          ElevatedButton.icon(
             onPressed: () async {
               try {
                 await FirebaseFirestore.instance.collection('ads').doc(adId).update({
@@ -63,8 +109,15 @@ class MyAdsScreen extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Update failed: $e")));
               }
             },
-            child: const Text("Save"),
-          )
+            icon: const Icon(Icons.save, size: 20),
+            label: const Text("Save"),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.brown,
+              foregroundColor: Colors.white,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              elevation: 0,
+            ),
+          ),
         ],
       ),
     );
@@ -84,10 +137,6 @@ class MyAdsScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xFFE5E0DB),
-      appBar: AppBar(title: const Text("My Ads"),
-        backgroundColor: const Color(0xFFE5E0DB),
-        foregroundColor: Colors.black,
-      ),
       body: StreamBuilder<QuerySnapshot>(
         stream: adQuery.snapshots(),
         builder: (context, snapshot) {
@@ -127,7 +176,10 @@ class MyAdsScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     ListTile(
-                      title: Text(title),
+                      title: Text(
+                        title,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      ),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -171,11 +223,41 @@ class MyAdsScreen extends StatelessWidget {
                           onPressed: () => _editAd(context, doc.id, ad),
                           icon: const Icon(Icons.edit),
                           label: const Text("Edit"),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.black,
+                          ),
                         ),
                         TextButton.icon(
-                          onPressed: () => _deleteAd(context, doc.id),
+                          onPressed: () async {
+                            final confirm = await showDialog<bool>(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: const Text('Delete Ad', style: TextStyle(fontWeight: FontWeight.bold)),
+                                content: const Text('Are you sure you want to delete this ad? This action cannot be undone.'),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(false),
+                                    child: const Text('Cancel'),
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.black,
+                                    ),
+                                  ),
+                                  TextButton(
+                                    onPressed: () => Navigator.of(ctx).pop(true),
+                                    child: const Text('Delete', style: TextStyle(color: Colors.red)),
+                                  ),
+                                ],
+                              ),
+                            );
+                            if (confirm == true) {
+                              _deleteAd(context, doc.id);
+                            }
+                          },
                           icon: const Icon(Icons.delete, color: Colors.red),
                           label: const Text("Delete"),
+                          style: TextButton.styleFrom(
+                            foregroundColor: Colors.red,
+                          ),
                         ),
                       ],
                     )
