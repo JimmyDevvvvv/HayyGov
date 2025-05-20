@@ -45,7 +45,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
       backgroundColor: bgColor,
       body: Column(
         children: [
-          const SizedBox(height: 30), // for status bar space
+          //const SizedBox(height: 30), // for status bar space
           // --- Switch between Inbox and Reports ---
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 18.0),
@@ -112,8 +112,7 @@ class _AdminInboxScreenState extends State<AdminInboxScreen> {
               ),
             ),
           ),
-          // --- End Switch ---
-          const SizedBox(height: 10),
+          // --- End Switch --- Increased space below switch, matches emergency_n
           Expanded(
             child: showInbox
                 ? StreamBuilder<QuerySnapshot>(

@@ -90,20 +90,26 @@ class _CreatePollScreenState extends State<CreatePollScreen> {
                 child: Column(
                   children: [
                     // Poll Title
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: TextFormField(
-                        controller: _titleController,
-                        decoration: const InputDecoration(
-                          hintText: 'Enter title... | ...أدخل العنوان',
-                          border: InputBorder.none,
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                        hintText: 'Enter title... | ...أدخل العنوان',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.black),
                         ),
-                        validator: (val) => val!.isEmpty ? 'Required' : null,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.black),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(12)),
+                          borderSide: BorderSide(color: Colors.brown, width: 2),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
                       ),
+                      validator: (val) => val!.isEmpty ? 'Required' : null,
                     ),
                     const SizedBox(height: 20),
 

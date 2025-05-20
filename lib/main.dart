@@ -39,7 +39,65 @@ class MyApp extends StatelessWidget {
       create: (_) => AuthProvider(),
       child: MaterialApp(
         title: 'HayyGov',
-        theme: ThemeData(primarySwatch: Colors.red),
+        theme: ThemeData(
+          primarySwatch: Colors.brown,
+          scaffoldBackgroundColor: const Color(0xFFF5E9DA), // sand-like background
+          colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.brown).copyWith(
+            secondary: const Color(0xFFD2B48C), // tan/sand accent
+            primary: const Color(0xFFC2B280), // sand primary
+            onPrimary: Colors.black, // text/icons on sand
+            onSecondary: Colors.black,
+            surface: Colors.white,
+            onSurface: Colors.black,
+            background: const Color(0xFFF5E9DA),
+            onBackground: Colors.black,
+            error: Colors.red,
+            onError: Colors.white,
+            brightness: Brightness.light,
+          ),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color(0xFFE5D3B3), // lighter sand for app bar
+            foregroundColor: Colors.black,
+            iconTheme: IconThemeData(color: Colors.black),
+            titleTextStyle: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+            elevation: 1,
+          ),
+          cardColor: const Color(0xFFF5E9DA),
+          inputDecorationTheme: InputDecorationTheme(
+            filled: true,
+            fillColor: Colors.white,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Color(0xFFD2B48C), width: 1.5),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Color(0xFFD2B48C), width: 1.5),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(color: Colors.brown, width: 2),
+            ),
+            hintStyle: TextStyle(color: Colors.brown.shade300),
+          ),
+          dividerColor: Color(0xFFD2B48C),
+          switchTheme: SwitchThemeData(
+            thumbColor: MaterialStatePropertyAll(Color(0xFFD2B48C)),
+            trackColor: MaterialStatePropertyAll(Color(0xFFC2B280)),
+          ),
+          checkboxTheme: CheckboxThemeData(
+            fillColor: MaterialStatePropertyAll(Color(0xFFD2B48C)),
+            checkColor: MaterialStatePropertyAll(Colors.black),
+          ),
+          radioTheme: RadioThemeData(
+            fillColor: MaterialStatePropertyAll(Color(0xFFD2B48C)),
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.brown,
+            selectionColor: Color(0xFFD2B48C),
+            selectionHandleColor: Colors.brown,
+          ),
+        ),
         debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey, // ✅ NEW
         routes: {
