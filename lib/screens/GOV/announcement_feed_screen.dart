@@ -95,7 +95,7 @@ class AnnouncementFeedScreen extends StatelessWidget {
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(ctx, false),
-                                  child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  child: const Text('Cancel', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),),
                                 ),
                                 ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(

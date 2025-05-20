@@ -36,7 +36,7 @@ class _GovernmentMainScreenState extends State<GovernmentMainScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            GovDashboardHeader(onNav: _navigateTo),
+            GovDashboardHeader(onNav: _navigateTo, currentIndex: _currentIndex),
             Expanded(
               child: IndexedStack(
                 index: _currentIndex,

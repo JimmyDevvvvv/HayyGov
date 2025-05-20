@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class GovDashboardHeader extends StatelessWidget {
   final void Function(int)? onNav;
-  const GovDashboardHeader({super.key, this.onNav});
+  final int currentIndex;
+  const GovDashboardHeader({super.key, this.onNav, required this.currentIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +25,7 @@ class GovDashboardHeader extends StatelessWidget {
             const Text(
               'HayyGov',
               style: TextStyle(
+                fontFamily: 'Cairo',
                 fontSize: 30,
                 fontWeight: FontWeight.bold,
                 color: Colors.black,
@@ -36,22 +38,22 @@ class GovDashboardHeader extends StatelessWidget {
               children: [
                 IconButton(
                   onPressed: () => onNav?.call(1),
-                  icon: const Icon(Icons.campaign, color: Colors.black45),
+                  icon: Icon(Icons.campaign, color: currentIndex == 1 ? Colors.black : Colors.black45),
                   tooltip: 'Announcements',
                 ),
                 IconButton(
                   onPressed: () => onNav?.call(2),
-                  icon: const Icon(Icons.poll, color: Colors.black45),
+                  icon: Icon(Icons.poll, color: currentIndex == 2 ? Colors.black : Colors.black45),
                   tooltip: 'Polls',
                 ),
                 IconButton(
                   onPressed: () => onNav?.call(3),
-                  icon: const Icon(Icons.message, color: Colors.black45),
+                  icon: Icon(Icons.message, color: currentIndex == 3 ? Colors.black : Colors.black45),
                   tooltip: 'Inbox',
                 ),
                 IconButton(
                   onPressed: () => onNav?.call(4),
-                  icon: const Icon(Icons.phone, color: Colors.black45),
+                  icon: Icon(Icons.phone, color: currentIndex == 4 ? Colors.black : Colors.black45),
                   tooltip: 'Emergency',
                 ),
               ],

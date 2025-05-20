@@ -68,17 +68,17 @@ class MyApp extends StatelessWidget {
             fillColor: Colors.white,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Color(0xFFD2B48C), width: 1.5),
+              borderSide: BorderSide.none,
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Color(0xFFD2B48C), width: 1.5),
+              borderSide: BorderSide.none,
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(16),
-              borderSide: BorderSide(color: Colors.brown, width: 2),
+              borderSide: BorderSide.none,
             ),
-            hintStyle: TextStyle(color: Colors.brown.shade300),
+            hintStyle: TextStyle(color: const Color(0xFF8E8E8E)),
           ),
           dividerColor: Color(0xFFD2B48C),
           switchTheme: SwitchThemeData(

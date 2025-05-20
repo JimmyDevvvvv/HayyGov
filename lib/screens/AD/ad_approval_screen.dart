@@ -258,46 +258,48 @@ class _AdApprovalScreenState extends State<AdApprovalScreen> {
                                   const SizedBox(height: 10),
                                   // Approve/Reject buttons row
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.center, // Center the buttons horizontally
+                                    mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       // Approve button
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: isApproved ? Colors.black : Colors.transparent,
-                                            width: 2,
-                                          ),
-                                          borderRadius: BorderRadius.circular(16),
-                                          color: isApproved ? Colors.green.withOpacity(0.12) : Colors.transparent,
+                                      ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: isApproved ? Colors.green : Colors.white,
+                                          foregroundColor: isApproved ? Colors.white : Colors.green,
+                                          side: BorderSide(color: Colors.green, width: 2),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                                          elevation: isApproved ? 4 : 0,
                                         ),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.thumb_up,
-                                            color: Colors.green, // Always green
-                                            size: 32,
+                                        icon: const Icon(Icons.thumb_up, size: 24),
+                                        label: Text(
+                                          isApproved ? 'Approved' : 'Approve',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: isApproved ? Colors.white : Colors.green,
                                           ),
-                                          onPressed: () => _approveAd(adId),
                                         ),
+                                        onPressed: () => _approveAd(adId),
                                       ),
                                       const SizedBox(width: 18),
                                       // Reject button
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: isRejected ? Colors.black : Colors.transparent,
-                                            width: 2,
-                                          ),
-                                          borderRadius: BorderRadius.circular(16),
-                                          color: isRejected ? Colors.red.withOpacity(0.12) : Colors.transparent,
+                                      ElevatedButton.icon(
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: isRejected ? Colors.red : Colors.white,
+                                          foregroundColor: isRejected ? Colors.white : Colors.red,
+                                          side: BorderSide(color: Colors.red, width: 2),
+                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
+                                          elevation: isRejected ? 4 : 0,
                                         ),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.thumb_down,
-                                            color: Colors.red, // Always red
-                                            size: 32,
+                                        icon: const Icon(Icons.thumb_down, size: 24),
+                                        label: Text(
+                                          isRejected ? 'Rejected' : 'Reject',
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: isRejected ? Colors.white : Colors.red,
                                           ),
-                                          onPressed: () => _deleteAd(adId),
                                         ),
+                                        onPressed: () => _deleteAd(adId),
                                       ),
                                     ],
                                   ),
