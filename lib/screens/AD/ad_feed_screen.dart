@@ -62,10 +62,11 @@ class AdFeedScreen extends StatelessWidget {
                               if (location.isNotEmpty)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
-                                  child: Row(
+                                  child: Wrap(
+                                    crossAxisAlignment: WrapCrossAlignment.center,
+                                    spacing: 4,
                                     children: [
                                       const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                                      const SizedBox(width: 4),
                                       Text(location, style: const TextStyle(color: Colors.grey)),
                                     ],
                                   ),
