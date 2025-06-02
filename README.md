@@ -85,7 +85,7 @@
 | Name                 | Responsibilities                                                                 |
 |----------------------|----------------------------------------------------------------------------------|
 | **Mohamed Gamal (Jimmy)** | - Developed the messaging system<br>- Implemented admin approval logic<br>- Integrated Google Maps for reporting<br>- Built the problem reporting feature<br>- Managed advertisements functionality<br>- Integrated push notifications |
-| **Ali**              | - Designed the UI/UX using Figma<br>- Implemented core UI components             |
+| **Ali**              | - Designed the UI/UX using Figma<br>- Implemented core UI components - Authentication Using Firebase             |
 | **Abdelrahman**      | - Developed the AI model for vulgar word detection (Arabic & English)           |
 | **Koshty**           | - Collaborated on the AI model for vulgar word filtering                        |
 | **Waleed**           | - Implemented the announcement creation, editing, and deletion system           |
